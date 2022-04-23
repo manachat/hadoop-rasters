@@ -1,4 +1,4 @@
 package vafilonov.hadooprasters.backend;
 
-public class Tile {
+public class FileMetadata {
 }
