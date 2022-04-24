@@ -37,7 +37,6 @@ public class GdalDataset {
 
             ds.width = (int) width;
             ds.height = (int) height;
-            ds.pixelCount = pixelCount;
 
             ds.fileIdentifier = jobId + "_" + UUID.randomUUID();
         } catch (Exception ex) {
