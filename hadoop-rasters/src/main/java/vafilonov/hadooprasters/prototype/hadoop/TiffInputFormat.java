@@ -9,11 +9,11 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
-public class TiffInputFormat extends FileInputFormat<Position, Tile> {
+public class TiffInputFormat extends FileInputFormat<Position, StackedTile> {
 
 
     @Override
-    public RecordReader<Position, Tile> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
+    public RecordReader<Position, StackedTile> createRecordReader(InputSplit split, TaskAttemptContext context) {
         return new TiffRecordReader();
     }
 
