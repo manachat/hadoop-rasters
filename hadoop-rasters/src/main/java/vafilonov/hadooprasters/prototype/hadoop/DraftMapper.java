@@ -10,7 +10,7 @@ public class DraftMapper extends Mapper<Position, StackedTile, Position, Stacked
     @Override
     protected void map(Position key, StackedTile value, Context context) throws IOException,
             InterruptedException {
-        System.out.println("MAPPER " + value.get(1) + " " + value.get(2) + " " + value.get(3) );
+        System.out.println("MAPPER " + value.get(3) + " " + value.get(2) + " " + value.get(1) );
         double[] rgbMinMax = value.getRgbMinMax();
         double redMin = rgbMinMax[0];
         double redMax = rgbMinMax[1];
@@ -19,9 +19,9 @@ public class DraftMapper extends Mapper<Position, StackedTile, Position, Stacked
         double blueMin = rgbMinMax[4];
         double blueMax = rgbMinMax[5];
 
-        int r = (int) ((value.get(1) - redMin) * 255 / (redMax - redMin));
+        int r = (int) ((value.get(3) - redMin) * 255 / (redMax - redMin));
         int g = (int) ((value.get(2) - greenMin) * 255 / (greenMax - greenMin));
-        int b = (int) ((value.get(3) - blueMin) * 255 / (blueMax - blueMin));
+        int b = (int) ((value.get(1) - blueMin) * 255 / (blueMax - blueMin));
 
         r = Math.max(0, r);
         r = Math.min(255, r);
@@ -29,9 +29,9 @@ public class DraftMapper extends Mapper<Position, StackedTile, Position, Stacked
         g = Math.min(255, g);
         b = Math.max(0, b);
         b = Math.min(255, b);
-        value.set(r, 1);
+        value.set(r, 3);
         value.set(g, 2);
-        value.set(b, 3);
+        value.set(b, 1);
         context.write(key, value);
     }
 }

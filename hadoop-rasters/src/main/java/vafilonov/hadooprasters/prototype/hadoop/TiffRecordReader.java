@@ -105,7 +105,7 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
         }
         int[] bands = new int[dataset.getDataset().getRasterCount()];
         for (int i = 0; i < bands.length; i++) {
-            bands[i] = bufferedRow.get(currentX * dataset.getDataset().getRasterCount() + i);
+            bands[i] = bufferedRow.get(currentX + i* dataset.getWidth());
         }
         return new StackedTile(bands, rgbMinMax);
     }
@@ -131,9 +131,9 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
         double[] rStats = new double[2];
         double[] gStats = new double[2];
         double[] bStats = new double[2];
-        dataset.getDataset().GetRasterBand(1).ComputeBandStats(rStats);
-        dataset.getDataset().GetRasterBand(2).ComputeBandStats(gStats);
-        dataset.getDataset().GetRasterBand(3).ComputeBandStats(bStats);
+        dataset.getDataset().GetRasterBand(4).ComputeBandStats(rStats);
+        dataset.getDataset().GetRasterBand(3).ComputeBandStats(gStats);
+        dataset.getDataset().GetRasterBand(2).ComputeBandStats(bStats);
         // 3 standard deviations
         int stdnum = 3;
         double redMin = rStats[0] - stdnum*rStats[1];
