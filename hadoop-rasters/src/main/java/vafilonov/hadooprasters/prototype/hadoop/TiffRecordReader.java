@@ -4,14 +4,20 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
+import java.util.UUID;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.gdal.gdalconst.gdalconst;
 import vafilonov.hadooprasters.prototype.gdal.GdalDataset;
+
 
 public class TiffRecordReader extends RecordReader<Position, StackedTile> {
 
@@ -19,6 +25,7 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
 
     private GdalDataset dataset;
 
+    private boolean localized = false;
     private ByteBuffer byteBuffer;
     private ShortBuffer bufferedRow;
 
@@ -30,21 +37,40 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
 
     @Override
     public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
-        var hadoopPath = ((FileSplit) split).getPath();
-        String localPath = hadoopPath.toUri().getPath();
-        String jobId = context.getJobID().toString();
+        Path hadoopPath = ((FileSplit) split).getPath();
+        Configuration conf = context.getConfiguration();
 
-        dataset = GdalDataset.loadDataset(localPath, jobId);
+        String localPath;
+        if (hadoopPath.toUri().getScheme().equals("file")) {
+            localPath = hadoopPath.toUri().getPath();
+        } else {
+            String tmpDirString = conf.get("hadoop.tmp.dir", "/tmp");
+            Path tempDir = new Path(tmpDirString);
+            Path tempFile = new Path(tempDir, UUID.randomUUID().toString().replace("-","_"));
+            tempDir.getFileSystem(conf).create(tempFile);
+            hadoopPath.getFileSystem(conf).copyToLocalFile(hadoopPath, tempFile);
+            localPath = tempFile.toUri().getPath();
+            localized = true;
+        }
+
+        String jobId = context.getJobID().toString();
+        System.out.println(hadoopPath.toUri().getScheme());
+
+
+        dataset = GdalDataset.loadDataset(localPath, jobId, localized);
         pixelCount = ((long) dataset.getWidth()) * ((long) dataset.getHeight());
 
         byteBuffer = ByteBuffer.allocateDirect(INT16_BYTE_LENGTH* dataset.getWidth()*dataset.getDataset().GetRasterCount())
                 .order(ByteOrder.nativeOrder());
         bufferedRow = byteBuffer.asShortBuffer();
+        dataset.getDataset().ReadRaster_Direct(currentX, currentY, dataset.getWidth(), 1, dataset.getWidth(), 1, gdalconst.GDT_Int16, byteBuffer, null);
 
         rgbMinMax = computeRgbMinMax();
 
         context.getCounter(JobUtilData.PIXEL_SIZE_GROUP, dataset.getFileIdentifier()).increment((long) pixelCount);
         context.getCounter(JobUtilData.FileMetadataEnum.FILES_NUMBER).increment(1);
+
+        System.out.println("Loaded fine");
     }
 
     @Override
@@ -55,13 +81,14 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
         } else if (currentY + 1 < dataset.getHeight()) {
             currentY += 1;
             currentX = 0;
+            return true;
         }
         return false;
     }
 
     @Override
     public Position getCurrentKey() {
-        var pos = new Position(currentX, currentY, dataset.getFileIdentifier());
+        Position pos = new Position(currentX, currentY, dataset.getFileIdentifier());
         pos.pixelCount = (long) pixelCount;
         pos.width = dataset.getWidth();
         pos.height = dataset.getHeight();
@@ -73,10 +100,12 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
         if (currentX == 0) {
             byteBuffer.clear();
             dataset.getDataset().ReadRaster_Direct(currentX, currentY, dataset.getWidth(), 1, dataset.getWidth(), 1, gdalconst.GDT_Int16, byteBuffer, null);
+            System.out.println(bufferedRow.get(5));
+            System.out.println(bufferedRow.get(60));
         }
         int[] bands = new int[dataset.getDataset().getRasterCount()];
         for (int i = 0; i < bands.length; i++) {
-            bands[i] = bufferedRow.get(i*currentX);
+            bands[i] = bufferedRow.get(currentX * dataset.getDataset().getRasterCount() + i);
         }
         return new StackedTile(bands, rgbMinMax);
     }
@@ -91,6 +120,10 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
         if (dataset != null) {
             dataset.delete();
         }
+        if (localized) {
+            // TODO
+        }
+        System.out.println("Reader closed");
     }
 
     private double[] computeRgbMinMax() {

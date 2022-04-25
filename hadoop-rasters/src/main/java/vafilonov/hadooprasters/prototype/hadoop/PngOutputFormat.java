@@ -25,6 +25,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class PngOutputFormat extends FileOutputFormat<Position, RgbTile> {
     @Override
     public RecordWriter<Position, RgbTile> getRecordWriter(TaskAttemptContext job) throws IOException {
+        System.out.println("Writer started");
         long fileNum = job.getCounter(JobUtilData.FileMetadataEnum.FILES_NUMBER).getValue();
 
         Path file = getDefaultWorkFile(job, "png");

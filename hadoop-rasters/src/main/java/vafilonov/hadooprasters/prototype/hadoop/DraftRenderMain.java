@@ -1,8 +1,12 @@
 package vafilonov.hadooprasters.prototype.hadoop;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -14,7 +18,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class DraftRenderMain {
     public static void main(String[] args) throws Exception {
+
         Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", "hdfs://localhost:9000");
+        System.out.println(conf.get("fs.defaultFS"));
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();
         if ((remainingArgs.length != 2) && (remainingArgs.length != 4)) {
@@ -27,6 +34,8 @@ public class DraftRenderMain {
         job.setReducerClass(DraftReducer.class);
         job.setOutputKeyClass(Position.class);
         job.setOutputValueClass(RgbTile.class);
+        job.setMapOutputKeyClass(Position.class);
+        job.setMapOutputValueClass(StackedTile.class);
         job.setCacheFiles(new URI[] {URI.create("hdfs://localhost:9000/libraries/libgdalalljni.so#libgdalalljni.so")});
 
         job.setInputFormatClass(TiffInputFormat.class);
@@ -44,8 +53,7 @@ public class DraftRenderMain {
 
 
         FileInputFormat.addInputPath(job, new Path(otherArgs.get(0)));
-        FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1)));
-
+        FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1) + "/try" + new Random().nextInt()));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }

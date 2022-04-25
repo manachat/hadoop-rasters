@@ -19,7 +19,7 @@ public class SentinelReader {
             System.out.println(Arrays.toString(ts));
             System.out.println(ds.GetRasterCount());
 
-            ds.GetMetadata_List().elements().asIterator().forEachRemaining(x -> System.out.println((String) x));
+            //ds.GetMetadata_List().elements().asIterator().forEachRemaining(x -> System.out.println((String) x));
         } finally {
             if (ds != null ) {
                 ds.delete();

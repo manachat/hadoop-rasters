@@ -10,6 +10,7 @@ public class DraftMapper extends Mapper<Position, StackedTile, Position, Stacked
     @Override
     protected void map(Position key, StackedTile value, Context context) throws IOException,
             InterruptedException {
+        System.out.println("MAPPER " + value.get(1) + " " + value.get(2) + " " + value.get(3) );
         double[] rgbMinMax = value.getRgbMinMax();
         double redMin = rgbMinMax[0];
         double redMax = rgbMinMax[1];

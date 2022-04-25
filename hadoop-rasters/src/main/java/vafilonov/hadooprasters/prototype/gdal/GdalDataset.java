@@ -14,6 +14,8 @@ public class GdalDataset {
     private String fileIdentifier;
     private Dataset dataset;
 
+    private boolean localized;
+
     private int width;
     private int height;
 
@@ -23,9 +25,10 @@ public class GdalDataset {
         dataset.delete();
     }
 
-    public static GdalDataset loadDataset(String path, String jobId) {
+    public static GdalDataset loadDataset(String path, String jobId, boolean localized) {
         Dataset dataset = null;
         GdalDataset ds = new GdalDataset();
+
 
         try {
             dataset = gdal.Open(path);
@@ -46,7 +49,7 @@ public class GdalDataset {
 
             throw ex;
         }
-
+        ds.localized = localized;
         return ds;
 
     }
