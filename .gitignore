@@ -11,4 +11,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .idea/
 hadoop-rasters/src/main/java/vafilonov/msd/
-
+resources/hadoop/
