@@ -12,7 +12,6 @@ import java.util.Random;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.filecache.DistributedCache;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -21,7 +20,7 @@ public class DraftRenderMain {
     public static void main(String[] args) throws Exception {
 
         Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", "hdfs://localhost:9000");
+        conf.set("fs.defaultFS", "hdfs://51.250.14.18:9000");
         System.out.println(conf.get("fs.defaultFS"));
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();
