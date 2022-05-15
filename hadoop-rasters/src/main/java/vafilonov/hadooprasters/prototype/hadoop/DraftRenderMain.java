@@ -15,6 +15,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DraftRenderMain {
     public static void main(String[] args) throws Exception {
@@ -22,6 +24,8 @@ public class DraftRenderMain {
         Configuration conf = new Configuration();
         conf.set("fs.defaultFS", "hdfs://51.250.14.18:9000");
         System.out.println(conf.get("fs.defaultFS"));
+        conf.set("mapreduce.jobtracker.address", "51.250.14.18:9001");
+
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();
         if ((remainingArgs.length != 2) && (remainingArgs.length != 4)) {
@@ -36,7 +40,7 @@ public class DraftRenderMain {
         job.setOutputValueClass(RgbTile.class);
         job.setMapOutputKeyClass(Position.class);
         job.setMapOutputValueClass(StackedTile.class);
-        job.setCacheFiles(new URI[] {URI.create("hdfs://localhost:9000/libraries/libgdalalljni.so#libgdalalljni.so")});
+        //job.setCacheFiles(new URI[] {URI.create("hdfs://51.250.14.18:9000/libraries/libgdalalljni.so#libgdalalljni.so")});
 
         job.setInputFormatClass(TiffInputFormat.class);
         job.setOutputFormatClass(PngOutputFormat.class);
@@ -50,7 +54,6 @@ public class DraftRenderMain {
                 otherArgs.add(remainingArgs[i]);
             }
         }
-
 
         FileInputFormat.addInputPath(job, new Path(otherArgs.get(0)));
         FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1) + "/try" + new Random().nextInt()));

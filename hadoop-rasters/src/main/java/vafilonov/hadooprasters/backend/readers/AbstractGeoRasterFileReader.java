@@ -1,7 +1,6 @@
-package vafilonov.hadooprasters.backend;
+package vafilonov.hadooprasters.backend.readers;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -12,42 +11,27 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import vafilonov.hadooprasters.backend.model.GdalDataset;
 import vafilonov.hadooprasters.util.JobUtils;
 
-public class GeoRasterFileReader<KeyType, ValueType> extends RecordReader<KeyType, ValueType> {
+public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends RecordReader<KeyType, ValueType> {
 
-    private GdalDataset dataset;
+    protected GdalDataset dataset;
 
-    //
+
     @Override
-    public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
+    public final void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
         Configuration conf = context.getConfiguration();
         String file = ensureLocalPath(((FileSplit) split).getPath(), conf);
         dataset = GdalDataset.loadDataset(file, context.getJobName());
 
+        innerInitialize((FileSplit) split, context);
+
     }
 
-    @Override
-    public boolean nextKeyValue() throws IOException, InterruptedException {
-        return false;
-    }
+    protected abstract void innerInitialize(FileSplit split, TaskAttemptContext context);
 
-    @Override
-    public KeyType getCurrentKey() throws IOException, InterruptedException {
-        return null;
-    }
-
-    @Override
-    public ValueType getCurrentValue() throws IOException, InterruptedException {
-        return null;
-    }
-
-    @Override
-    public float getProgress() throws IOException, InterruptedException {
-        return 0;
-    }
 
     @Override
     public void close() throws IOException {
-
+        dataset.delete();
     }
 
     /**

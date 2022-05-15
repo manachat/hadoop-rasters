@@ -16,10 +16,14 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.gdal.gdalconst.gdalconst;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vafilonov.hadooprasters.prototype.gdal.GdalDataset;
 
 
 public class TiffRecordReader extends RecordReader<Position, StackedTile> {
+
+    private static Logger LOG = LoggerFactory.getLogger(TiffRecordReader.class);
 
     private static final int INT16_BYTE_LENGTH = 2;
 
@@ -39,6 +43,7 @@ public class TiffRecordReader extends RecordReader<Position, StackedTile> {
     public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
         Path hadoopPath = ((FileSplit) split).getPath();
         Configuration conf = context.getConfiguration();
+        LOG.info("I AM ALIVE");
 
         String localPath;
         if (hadoopPath.toUri().getScheme().equals("file")) {

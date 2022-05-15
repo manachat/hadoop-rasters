@@ -14,8 +14,6 @@ public class GdalDataset {
     private String fileIdentifier;
     private Dataset dataset;
 
-    private boolean localized;
-
     private int width;
     private int height;
 
@@ -36,7 +34,6 @@ public class GdalDataset {
 
             long width = dataset.getRasterXSize();
             long height = dataset.getRasterYSize();
-            long pixelCount = width * height;
 
             ds.width = (int) width;
             ds.height = (int) height;
