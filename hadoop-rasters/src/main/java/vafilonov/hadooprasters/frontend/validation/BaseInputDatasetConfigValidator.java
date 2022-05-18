@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.backend.config;
+package vafilonov.hadooprasters.frontend.validation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,9 +7,9 @@ import java.util.Set;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vafilonov.hadooprasters.backend.config.json.BandConfig;
-import vafilonov.hadooprasters.backend.config.json.DatasetConfig;
-import vafilonov.hadooprasters.backend.config.json.JobInputConfig;
+import vafilonov.hadooprasters.frontend.model.json.BandConfig;
+import vafilonov.hadooprasters.frontend.model.json.DatasetConfig;
+import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInputConfig> {
 
@@ -41,7 +41,7 @@ public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInput
 
         if (dataset.getBandConfigs().isEmpty()) {
             LOG.error("Dataset id={} has 0 bands associated", datasetId);
-            throw new IllegalArgumentException("Dtaaset " + datasetId + " has files associated");
+            throw new IllegalArgumentException("Dataset " + datasetId + " has files associated");
         }
 
         Set<Integer> indices = new HashSet<>();

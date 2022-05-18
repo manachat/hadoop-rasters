@@ -1,0 +1,23 @@
+{
+  "datasets": [
+    {
+      "dataset_id": "a",
+      "bands": [
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/data/Forest_12.tif",
+          "index": 0
+        }
+      ]
+    }, {
+      "dataset_id": "a",
+      "bands": [
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/data/Forest_15.tif",
+          "index": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 package vafilonov.hadooprasters.frontend;
 
-public class TaskBuilder {
+public class JobRegistry {
+
+
 }

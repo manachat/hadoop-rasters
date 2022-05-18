@@ -1,12 +1,15 @@
 package vafilonov.hadooprasters.backend.readers;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
 
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import vafilonov.hadooprasters.backend.model.GdalDataset;
 
-public class FileMetadataReader extends AbstractGeoRasterFileReader<String, GdalDataset> {
+public class FileMetadataReader extends AbstractGeoRasterFileReader<Text, Text> {
 
     private boolean datasetProvided = false;
 
@@ -15,7 +18,9 @@ public class FileMetadataReader extends AbstractGeoRasterFileReader<String, Gdal
     @Override
     protected void innerInitialize(FileSplit split, TaskAttemptContext context) {
         //TODO: точка отказа, не уверен в формате URI
-        hdfsPath = split.getPath().toString();
+        hdfsPath = split.getPath().toString(); // true path
+
+
 
     }
 
@@ -29,17 +34,22 @@ public class FileMetadataReader extends AbstractGeoRasterFileReader<String, Gdal
      */
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
-        return datasetProvided;
+        if (datasetProvided) {
+            return false;
+        } else {
+            datasetProvided = true;
+            return true;
+        }
     }
 
     @Override
-    public String getCurrentKey() throws IOException, InterruptedException {
-        dataset.getFileIdentifier();
+    public Text getCurrentKey() throws IOException, InterruptedException {
+        return new Text(dataset.getFileIdentifier());
     }
 
     @Override
-    public GdalDataset getCurrentValue() throws IOException, InterruptedException {
-        return null;
+    public Text getCurrentValue() throws IOException, InterruptedException {
+        return new Text(hdfsPath);
     }
 
     @Override

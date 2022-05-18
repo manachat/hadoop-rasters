@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.backend.config.json;
+package vafilonov.hadooprasters.frontend.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
