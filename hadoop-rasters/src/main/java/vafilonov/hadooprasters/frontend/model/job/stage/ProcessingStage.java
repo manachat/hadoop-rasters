@@ -4,6 +4,7 @@ import org.apache.hadoop.mapreduce.*;
 import vafilonov.hadooprasters.frontend.model.job.JobResult;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.apache.hadoop.mapreduce.MRJobConfig.CACHE_FILES;
 import static org.apache.hadoop.mapreduce.MRJobConfig.TASK_OUTPUT_DIR;
@@ -12,9 +13,11 @@ import static org.apache.hadoop.mapreduce.lib.input.FileInputFormat.INPUT_DIR;
 /**
  * Describes processing stage of pipeline
  */
-public abstract class ProcessingStage<InputContext extends StageContext, OutputContext extends StageContext> {
+public class ProcessingStage<InputContext extends StageContext, OutputContext extends StageContext> {
     
     protected Optional<ProcessingStage<? extends StageContext, InputContext>> previous = Optional.empty();
+
+    protected final Function<Optional<InputContext>, OutputContext> processing;
 
     /**
      *
@@ -30,42 +33,33 @@ public abstract class ProcessingStage<InputContext extends StageContext, OutputC
         }
         
         try {
-            return process(Optional.ofNullable(previousResult));
+            return processing.apply(Optional.ofNullable(previousResult));
         } catch (Exception ex) {
             return OutputContext.failure();
         }
     }
 
-    protected abstract OutputContext process(Optional<InputContext> context);
-
-    public ProcessingStage<OutputContext, ? extends StageContext> andThen(
-            ProcessingStage<OutputContext, ? extends StageContext> nextStage
+    public <NextContext extends StageContext> ProcessingStage<OutputContext, NextContext> andThen(
+            Function<Optional<OutputContext>, NextContext> nextStage
     ) {
-        nextStage.previous = Optional.of(this);
-        return nextStage;
+        return new ProcessingStage<>(nextStage, this);
     }
 
-    public static <OUT extends StageContext> ProcessingStage<?, OUT> create() {
-        return new ProcessingStage<StageContext, OUT>() {
-            @Override
-            protected OUT process(Optional<StageContext> stageContext) {
-                return OUT.dummy();
-            }
-        };
+
+    public static ProcessingStage<?, StageContext.DummyContext> create() {
+        return new ProcessingStage<>((stageContext -> StageContext.dummy()));
     }
 
-    /*
-    protected ProcessingStage(
-            Job job
+    private ProcessingStage(Function<Optional<InputContext>, OutputContext> processing) {
+        this.processing = processing;
+    }
+
+    private ProcessingStage(
+            Function<Optional<InputContext>, OutputContext> processing,
+            ProcessingStage<? extends StageContext, InputContext> previous
     ) {
-        associatedJob = job;
-
-        inputDir = job.getConfiguration().get(INPUT_DIR);
-        cacheDir = job.getConfiguration().get(CACHE_FILES);
-        outputDir = job.getConfiguration().get(TASK_OUTPUT_DIR);
-
+        this.processing = processing;
+        this.previous = Optional.of(previous);
     }
-
-     */
 
 }

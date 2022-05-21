@@ -4,13 +4,6 @@ import java.util.Optional;
 
 public interface StageContext {
 
-    String getInputDir();
-
-    String getOutputDir();
-
-    Optional<String> provideNextInput();
-
-    Optional<String> provideNextCache();
 
     boolean isSuccessFull();
 
@@ -19,61 +12,22 @@ public interface StageContext {
         return (Fail) new StageContext() {
 
             @Override
-            public String getInputDir() {
-                return null;
-            }
-
-            @Override
-            public String getOutputDir() {
-                return null;
-            }
-
-            @Override
-            public Optional<String> provideNextInput() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Optional<String> provideNextCache() {
-                return Optional.empty();
-            }
-
-            @Override
             public boolean isSuccessFull() {
                 return false;
             }
         };
     }
 
-    @SuppressWarnings("unchecked")
-    static <Success extends StageContext> Success dummy() {
-        return (Success) new StageContext() {
+    static DummyContext dummy() {
+        return new DummyContext();
+    }
 
-            @Override
-            public String getInputDir() {
-                return null;
-            }
+    class DummyContext implements StageContext {
 
-            @Override
-            public String getOutputDir() {
-                return null;
-            }
-
-            @Override
-            public Optional<String> provideNextInput() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Optional<String> provideNextCache() {
-                return Optional.empty();
-            }
-
-            @Override
-            public boolean isSuccessFull() {
-                return true;
-            }
-        };
+        @Override
+        public boolean isSuccessFull() {
+            return true;
+        }
     }
 
 
