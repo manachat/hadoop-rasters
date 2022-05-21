@@ -11,6 +11,8 @@ import static vafilonov.hadooprasters.core.util.PropertyConstants.TEMP_DIR;
 
 public class JobUtils {
 
+    private static final String SUCCESS_FILENAME = "_SUCCESS";
+
     /**
      * Returns configured temp dir
      * @param conf
@@ -45,6 +47,10 @@ public class JobUtils {
         cahceDir.getFileSystem(conf).copyFromLocalFile(file, hdfsCacheFilePath);
 
         return hdfsCacheFilePath;
+    }
+
+    public static boolean checkJobSuccess(Path outputDir, Configuration conf) throws IOException {
+        return outputDir.getFileSystem(conf).exists(new Path(outputDir, SUCCESS_FILENAME));
     }
 
 

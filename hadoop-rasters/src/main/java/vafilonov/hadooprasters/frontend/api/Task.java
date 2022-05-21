@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * @param <Input>
  * @param <Result>
  */
+@FunctionalInterface
 public interface Task<Input, Result> {
 
     Result process(@Nonnull ArrayList<Input> inputs);
