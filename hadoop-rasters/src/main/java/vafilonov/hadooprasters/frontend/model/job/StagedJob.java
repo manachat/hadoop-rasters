@@ -1,6 +1,6 @@
 package vafilonov.hadooprasters.frontend.model.job;
 
-import vafilonov.hadooprasters.frontend.model.job.stage.ProcessingStage;
+import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 
 import java.util.ArrayList;
 

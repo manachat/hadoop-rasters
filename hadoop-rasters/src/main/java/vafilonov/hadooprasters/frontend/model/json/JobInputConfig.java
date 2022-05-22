@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JobInputConfig {
 
+    @JsonProperty("output_dir")
+    private String outputDir;
+
     @JsonProperty("datasets")
     private List<DatasetConfig> datasets = new ArrayList<>();
 
