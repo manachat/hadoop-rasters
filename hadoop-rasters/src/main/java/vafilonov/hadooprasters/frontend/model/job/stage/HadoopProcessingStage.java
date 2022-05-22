@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 
 public abstract class HadoopProcessingStage<InputContext extends HadoopStageContext, OutputContext extends HadoopStageContext>
         extends ProcessingStage<InputContext, OutputContext> {
@@ -37,7 +36,7 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      * Make needed adjustments and enhancements to job:
      * set mapper/reducer classes, input formats, etc.
      */
-    protected abstract void setupJob(Job job, Optional<InputContext> inputContext);
+    protected abstract void setupJob(Job job, @Nullable InputContext inputContext);
 
     /**
      * creates output context upon job successful completion
@@ -45,24 +44,24 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      * @param inputContext
      * @return
      */
-    protected abstract OutputContext createOutputContext(Job job, Optional<InputContext> inputContext);
+    protected abstract OutputContext createOutputContext(Job job, @Nullable InputContext inputContext);
 
     /**
      * called upon job completion (successful or not)
      * @param job
      */
-    protected abstract void cleanupJob(Job job, Optional<InputContext> inputContext);
+    protected abstract void cleanupJob(Job job, @Nullable InputContext inputContext);
 
     @Override
-    protected final StageContext processStageInternal(Optional<InputContext> inputContextO) {
+    protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
-            if (inputContextO.isPresent()) {
-                forwardDirStageResources(inputContextO.get().getDirStageResources());
-                forwardCacheStageResources(inputContextO.get().getCacheStageResources());
+            if (inputContext != null) {
+                forwardDirStageResources(inputContext.getDirStageResources());
+                forwardCacheStageResources(inputContext.getCacheStageResources());
             }
 
-            createAndSetupJob(inputContextO);
+            createAndSetupJob(inputContext);
 
             if (!associatedJob.waitForCompletion(true)) {
                 return StageContext.failure("Job " + associatedJob.getJobName() + " failed.");
@@ -71,10 +70,10 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {
-            cleanupJob(associatedJob, inputContextO);
+            cleanupJob(associatedJob, inputContext);
         }
 
-        return createOutputContext(associatedJob, inputContextO);
+        return createOutputContext(associatedJob, inputContext);
     }
 
     /**
@@ -82,7 +81,7 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      * @param inputContext input context from previous stage
      * @throws IOException in cace of job creation failure
      */
-    private void createAndSetupJob(Optional<InputContext> inputContext) throws IOException {
+    private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
         setupJob(associatedJob, inputContext);
     }
