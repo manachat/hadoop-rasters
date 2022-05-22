@@ -9,7 +9,7 @@ import vafilonov.hadooprasters.frontend.validation.ConfigValidator;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MetadataProcessingStage extends ProcessingStage {
+public class MetadataProcessingResultContext implements HadoopStageContext{
 
     private static final String METADATA_JOB_PREFIX = "Metadata_Job_";
 
@@ -17,7 +17,7 @@ public class MetadataProcessingStage extends ProcessingStage {
 
     private static final ConfigValidator<JobInputConfig> defaultConfigValidator = new BaseInputDatasetConfigValidator();
 
-    public static <T extends JobInputConfig, K extends JobProcessingContext> MetadataProcessingStage
+    public static <T extends JobInputConfig, K extends JobProcessingContext> MetadataProcessingResultContext
     createStage(
             K context,
             T config,
@@ -42,6 +42,21 @@ public class MetadataProcessingStage extends ProcessingStage {
 
     private static EnrichedMetadataJobConfig createExtendedConfig(JobInputConfig config) {
 
+    }
+
+    @Override
+    public boolean isSuccessFull() {
+        return false;
+    }
+
+    @Override
+    public StageResource.DirStageResource getDirStageResources() {
+        return null;
+    }
+
+    @Override
+    public StageResource.CacheStageResource getCacheStageResources() {
+        return null;
     }
 
 

@@ -9,7 +9,6 @@ import vafilonov.hadooprasters.frontend.model.job.stage.ProcessingStage;
 import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.DEFAULT_FS;
 
@@ -35,7 +34,7 @@ public interface RasterProcessingJob {
     }
 
 
-    JobResult run();
+    JobResult executeJob();
 
 
 
@@ -47,13 +46,20 @@ public interface RasterProcessingJob {
                 JobInputConfig jobConfig,
                 Configuration clusterConfig
         ) {
-            ProcessingStage metadataStage = createMetadataProcessingStage();
-            ProcessingStage processingStage = createRasterProcessingStage();
+
+
+        }
+
+        private Function<> createMetadataProcessingStage() {
+
+        }
+
+        private ProcessingStage createRasterProcessingStage() {
 
         }
 
         @Override
-        public JobResult run() {
+        public JobResult executeJob() {
             throw new RuntimeException();
         }
     }

@@ -1,32 +1,65 @@
 package vafilonov.hadooprasters.frontend.model.job.stage;
 
-import java.util.Optional;
+import vafilonov.hadooprasters.core.JobFailException;
+
+import javax.annotation.Nullable;
 
 public interface StageContext {
 
 
+    /**
+     * was processing successfull
+     * @return
+     */
     boolean isSuccessFull();
 
-    @SuppressWarnings("unchecked")
-    static <Fail extends StageContext> Fail failure() {
-        return (Fail) new StageContext() {
+    @Nullable
+    Throwable getCause();
 
-            @Override
-            public boolean isSuccessFull() {
-                return false;
-            }
-        };
+
+    static FailContext failure() {
+        return new FailContext(null);
     }
 
-    static DummyContext dummy() {
-        return new DummyContext();
+    static FailContext failure(String message) {
+        return new FailContext(new JobFailException(message));
     }
 
-    class DummyContext implements StageContext {
+    static FailContext failure(Throwable t) {
+        return new FailContext(t);
+    }
 
+    static EmptyContext dummy() {
+        return new EmptyContext();
+    }
+
+    class EmptyContext implements StageContext {
+        private EmptyContext() { }
         @Override
         public boolean isSuccessFull() {
             return true;
+        }
+
+        @Override
+        public Throwable getCause() {
+            return null;
+        }
+    }
+
+    final class FailContext implements StageContext {
+
+        private final Throwable cause;
+        private FailContext(Throwable t) {
+            this.cause = t;
+        }
+
+        @Override
+        public boolean isSuccessFull() {
+            return false;
+        }
+
+        public Throwable getCause() {
+            return cause;
         }
     }
 

@@ -4,13 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
+import vafilonov.hadooprasters.backend.mapper.StringMetadataMapper;
+import vafilonov.hadooprasters.backend.readers.FileMetadataInputFormat;
 import vafilonov.hadooprasters.core.util.JobUtils;
 import vafilonov.hadooprasters.frontend.validation.BaseInputDatasetConfigValidator;
 import vafilonov.hadooprasters.frontend.validation.ConfigValidator;
 import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.TEMP_DIR;
 
@@ -38,7 +48,7 @@ public class Main {
 		Job job = Job.getInstance(conf, "Metadata test");
 
 		System.out.println(JobUtils.uploadCacheFileToHDFS(new Path(Main.class.getClassLoader().getResource("json/test_config.json").toURI()), conf, "Biba"));
-		/*
+
 		GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
 		String[] remainingArgs = optionParser.getRemainingArgs();
 		if ((remainingArgs.length != 2) && (remainingArgs.length != 4)) {
@@ -72,6 +82,6 @@ public class Main {
 		FileOutputFormat.setOutputPath(job, p);
 		System.out.println(p);
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
-		*/
+
 	}
 }

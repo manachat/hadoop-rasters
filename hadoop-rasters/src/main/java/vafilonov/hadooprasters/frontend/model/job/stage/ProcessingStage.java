@@ -1,65 +1,55 @@
 package vafilonov.hadooprasters.frontend.model.job.stage;
 
-import org.apache.hadoop.mapreduce.*;
-import vafilonov.hadooprasters.frontend.model.job.JobResult;
-
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static org.apache.hadoop.mapreduce.MRJobConfig.CACHE_FILES;
-import static org.apache.hadoop.mapreduce.MRJobConfig.TASK_OUTPUT_DIR;
-import static org.apache.hadoop.mapreduce.lib.input.FileInputFormat.INPUT_DIR;
 
 /**
  * Describes processing stage of pipeline
  */
-public class ProcessingStage<InputContext extends StageContext, OutputContext extends StageContext> {
+public abstract class ProcessingStage<InputContext extends StageContext, OutputContext extends StageContext> {
     
-    protected Optional<ProcessingStage<? extends StageContext, InputContext>> previous = Optional.empty();
+    protected Optional<ProcessingStage<? extends StageContext, InputContext>> previous;
 
-    protected final Function<Optional<InputContext>, OutputContext> processing;
+    protected ProcessingStage(
+            @Nullable ProcessingStage<? extends StageContext, InputContext> previous
+    ) {
+        this.previous = Optional.ofNullable(previous);
+    }
+
+    protected abstract StageContext processStageInternal(Optional<InputContext> inputContextO);
 
     /**
-     *
+     * Recursively processes stages of computation
+     * @return
      */
-    public OutputContext processStage() {
-        InputContext previousResult = null;
+    @SuppressWarnings("unchecked")
+    private StageContext processStage() {
+        StageContext previousResult = null;
         if (previous.isPresent()) {
             previousResult = previous.get().processStage();
 
             if (!previousResult.isSuccessFull()) {
-                return OutputContext.failure();
+                return previousResult;
             }
         }
         
         try {
-            return processing.apply(Optional.ofNullable(previousResult));
+            return processStageInternal(Optional.ofNullable((InputContext) previousResult));
         } catch (Exception ex) {
-            return OutputContext.failure();
+            return StageContext.failure(ex);
         }
     }
 
-    public <NextContext extends StageContext> ProcessingStage<OutputContext, NextContext> andThen(
+    /**
+     * Extends pipeline for next stage.
+     * @param nextStage computation of next stage
+     * @return Head of new pipeline
+     * @param <NextContext> type of the context, returned by head stage
+     */
+    public abstract  <NextContext extends StageContext> ProcessingStage<OutputContext, NextContext> andThen(
             Function<Optional<OutputContext>, NextContext> nextStage
-    ) {
-        return new ProcessingStage<>(nextStage, this);
-    }
-
-
-    public static ProcessingStage<?, StageContext.DummyContext> create() {
-        return new ProcessingStage<>((stageContext -> StageContext.dummy()));
-    }
-
-    private ProcessingStage(Function<Optional<InputContext>, OutputContext> processing) {
-        this.processing = processing;
-    }
-
-    private ProcessingStage(
-            Function<Optional<InputContext>, OutputContext> processing,
-            ProcessingStage<? extends StageContext, InputContext> previous
-    ) {
-        this.processing = processing;
-        this.previous = Optional.of(previous);
-    }
+    );
 
 }
