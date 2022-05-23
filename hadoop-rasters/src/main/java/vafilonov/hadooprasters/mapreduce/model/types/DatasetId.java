@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.mapreduce.map.metadata;
+package vafilonov.hadooprasters.mapreduce.model.types;
 
 import org.apache.hadoop.io.Text;
 

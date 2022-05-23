@@ -6,10 +6,11 @@ import vafilonov.hadooprasters.mapreduce.map.AbstractGeodataMapper;
 import vafilonov.hadooprasters.mapreduce.model.json.BandMetadataJson;
 import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;
 import vafilonov.hadooprasters.mapreduce.model.GdalDataset;
+import vafilonov.hadooprasters.mapreduce.model.types.DatasetId;
 
 import java.io.IOException;
 
-public class MetadataJobMapper extends AbstractGeodataMapper<String, GdalDataset, DatasetId, BandMetainfo> {
+public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalDataset, DatasetId, BandMetainfo> {
 
     /**
      * <href=https://gdal.org/user/raster_data_model.html />
@@ -20,7 +21,7 @@ public class MetadataJobMapper extends AbstractGeodataMapper<String, GdalDataset
      * @throws InterruptedException
      */
     @Override
-    protected void map(String key, GdalDataset value, Context context) throws IOException, InterruptedException {
+    protected void map(DatasetId key, GdalDataset value, Context context) throws IOException, InterruptedException {
 
         BandMetadataJson json = new BandMetadataJson();
         json.setWidth(value.getWidth());
@@ -34,7 +35,13 @@ public class MetadataJobMapper extends AbstractGeodataMapper<String, GdalDataset
         json.setX((int) geoTransform[0]);
         json.setY((int) geoTransform[3]);
 
+        double[] bandStats = new double[2];
+        value.getDataset().GetRasterBand(0).ComputeBandStats(bandStats);
+        json.setMean(bandStats[0]);
+        json.setVar(bandStats[1]);
+
+        System.out.println(ConfigUtils.MAPPER.writeValueAsString(json));
         // collects metdata, retuns datasetId + JSON Text (or serialized object)
-        context.write(new DatasetId(key), new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
+        context.write(key, new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
     }
 }

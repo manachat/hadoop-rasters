@@ -20,6 +20,12 @@ public class BandMetadataJson {
     @JsonProperty
     private int y;
 
+    @JsonProperty
+    private double mean;
+
+    @JsonProperty
+    private double var;
+
 
     public int getWidth() {
         return width;
@@ -59,5 +65,21 @@ public class BandMetadataJson {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public double getMean() {
+        return mean;
+    }
+
+    public void setMean(double mean) {
+        this.mean = mean;
+    }
+
+    public double getVar() {
+        return var;
+    }
+
+    public void setVar(double var) {
+        this.var = var;
     }
 }
