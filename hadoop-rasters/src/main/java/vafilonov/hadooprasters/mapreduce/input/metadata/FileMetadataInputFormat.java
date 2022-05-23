@@ -7,12 +7,16 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import vafilonov.hadooprasters.mapreduce.model.GdalDataset;
 
 import java.io.IOException;
 
-public class FileMetadataInputFormat extends FileInputFormat<Text, Text> {
+/**
+ * Input format for raster files to be processed by metadata collector job
+ */
+public class FileMetadataInputFormat extends FileInputFormat<String, GdalDataset> {
     @Override
-    public RecordReader<Text, Text> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
+    public RecordReader<String, GdalDataset> createRecordReader(InputSplit split, TaskAttemptContext context) {
         return new FileMetadataReader();
     }
 

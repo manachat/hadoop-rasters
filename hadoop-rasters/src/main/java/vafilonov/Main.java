@@ -18,6 +18,7 @@ import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,16 +39,20 @@ public class Main {
 
 
 		Configuration conf = new Configuration();
-		conf.set("fs.defaultFS", "hdfs://localhost:9000");
+		conf.set("fs.defaultFS", "hdfs://10.128.0.25:9000");
 		System.out.println(conf.get("fs.defaultFS"));
 		System.out.println(conf.get(TEMP_DIR.getProperty()));
 
 		String FS = conf.get("fs.defaultFS");
 		System.out.println(conf.get("hadoop.tmp.dir"));
 
-		Job job = Job.getInstance(conf, "Metadata test");
 
-		System.out.println(JobUtils.uploadCacheFileToHDFS(new Path(Main.class.getClassLoader().getResource("json/test_config.json").toURI()), conf, "Biba"));
+		JobUtils.cleanupAttemptTempDir(conf, "Biba");
+		JobUtils.cleanUpCacheDirOnHDFS(conf, "Biba");
+
+		URL url = Main.class.getClassLoader().getResource("json/test_config.json");
+		URI uri_1 = url.toURI();
+		System.out.println(JobUtils.uploadCacheFileToHDFS(new Path(uri_1), conf, "Biba"));
 
 		GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
 		String[] remainingArgs = optionParser.getRemainingArgs();
@@ -81,7 +86,9 @@ public class Main {
 		Path p =  new Path(FS + otherArgs.get(1) + "/try" + (1 + new Random().nextInt(1000)));
 		FileOutputFormat.setOutputPath(job, p);
 		System.out.println(p);
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+		job.waitForCompletion(true);
+
+		JobUtils.cleanUpCacheDirOnHDFS(conf, "Biba");
 
 	}
 }

@@ -29,7 +29,7 @@ public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInput
     private void validateDatasetConfig(DatasetConfig dataset, Set<String> datasetIds) {
         String datasetId = dataset.getDatasetId();
         // check name
-        if (datasetId == null || !datasetId.matches(PATTERN)) {
+        if (datasetId != null && !datasetId.matches(PATTERN)) {
             LOG.error("Dataset id {} is null or does not match pattern {}", datasetId, PATTERN);
             throw new IllegalArgumentException("Dataset id " + datasetId + " is invalid.");
         }

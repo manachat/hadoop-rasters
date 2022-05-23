@@ -1,5 +1,6 @@
 package vafilonov.hadooprasters.core.processing.stage.hadoop;
 
+import org.apache.hadoop.conf.Configuration;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 
 import static vafilonov.hadooprasters.core.processing.stage.hadoop.StageResource.*;
@@ -17,4 +18,10 @@ public interface HadoopStageContext extends StageContext {
      * @return
      */
     CacheStageResource getCacheStageResources();
+
+    /**
+     * Returns Hadoop configuration
+     * @return
+     */
+    Configuration getConfiguration();
 }

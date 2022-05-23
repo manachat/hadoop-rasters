@@ -11,19 +11,13 @@ import vafilonov.hadooprasters.mapreduce.model.GdalDataset;
 /**
  * Returns pair: <hdfs_path, datasetObject>
  */
-public class FileMetadataReader extends AbstractGeoRasterFileReader<Text, GdalDataset> {
+public class FileMetadataReader extends AbstractGeoRasterFileReader<String, GdalDataset> {
 
     private boolean datasetProvided = false;
 
-    private String hdfsPath;
-
     @Override
     protected void innerInitialize(FileSplit split, TaskAttemptContext context) {
-        //TODO: точка отказа, не уверен в формате URI
-        hdfsPath = split.getPath().toString(); // true path
-
-
-
+        // empty
     }
 
     /**
@@ -45,8 +39,8 @@ public class FileMetadataReader extends AbstractGeoRasterFileReader<Text, GdalDa
     }
 
     @Override
-    public Text getCurrentKey() throws IOException, InterruptedException {
-        return new Text(hdfsPath);
+    public String getCurrentKey() throws IOException, InterruptedException {
+        return dataset.getFileIdentifier();
     }
 
     @Override

@@ -9,7 +9,7 @@ import vafilonov.hadooprasters.frontend.model.stage.context.MetadataInputContext
 import vafilonov.hadooprasters.frontend.model.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.metadata.FileMetadataInputFormat;
 import vafilonov.hadooprasters.mapreduce.map.metadata.MetadataJobMapper;
-import vafilonov.hadooprasters.mapreduce.model.DatasetMetainfo;
+import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;
 import vafilonov.hadooprasters.mapreduce.output.metadata.FileMetadataOutputFormat;
 import vafilonov.hadooprasters.mapreduce.reduce.metadata.MetadataJobReducer;
 
@@ -37,13 +37,14 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         job.setMapOutputValueClass(Text.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(DatasetMetainfo.class);
+        job.setOutputValueClass(BandMetainfo.class);
 
         job.setInputFormatClass(FileMetadataInputFormat.class);
         job.setOutputFormatClass(FileMetadataOutputFormat.class);
 
 
-        FileOutputFormat.setOutputPath(job, );
+        FileOutputFormat.setOutputPath(job, null);
+        throw new RuntimeException("not ready");
         // set mapper, reducer, input formats
     }
 
