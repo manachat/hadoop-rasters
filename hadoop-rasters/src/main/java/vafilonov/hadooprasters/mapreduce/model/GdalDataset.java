@@ -2,6 +2,8 @@ package vafilonov.hadooprasters.mapreduce.model;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
 
@@ -49,6 +51,10 @@ public class GdalDataset {
 
         return ds;
 
+    }
+
+    public void setFileIdentifier(@Nonnull String fileIdentifier) {
+        this.fileIdentifier = fileIdentifier;
     }
 
     public String getFileIdentifier() {

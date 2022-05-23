@@ -1,11 +1,17 @@
 package vafilonov.hadooprasters.frontend.model.stage.context;
 
 import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContext;
+import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContextCarcass;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.StageResource;
 
 import javax.annotation.Nullable;
 
-public class MetadataOutputContext implements HadoopStageContext {
+public class MetadataOutputContext extends HadoopStageContextCarcass {
+
+    public MetadataOutputContext() {
+        super(null);
+    }
+
     @Override
     public StageResource.DirStageResource getDirStageResources() {
         return null;

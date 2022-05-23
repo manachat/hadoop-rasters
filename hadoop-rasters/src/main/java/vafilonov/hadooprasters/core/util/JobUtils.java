@@ -1,10 +1,14 @@
 package vafilonov.hadooprasters.core.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.DISTRIBUTED_CACHE_DIR;
 import static vafilonov.hadooprasters.core.util.PropertyConstants.TEMP_DIR;
@@ -21,6 +25,10 @@ public class JobUtils {
     public static Path getTempDir(Configuration conf) {
         String tmpDirString = conf.get(TEMP_DIR.getProperty(), TEMP_DIR.getPropertyValue());
         return new Path(tmpDirString);
+    }
+
+    public static Path getCacheDir(Configuration conf) {
+        return new Path(DISTRIBUTED_CACHE_DIR.getPropertyValue());
     }
 
     /**
@@ -42,11 +50,16 @@ public class JobUtils {
     }
 
     public static Path uploadCacheFileToHDFS(Path file, Configuration conf, String key) throws IOException {
-        Path cahceDir = new Path(DISTRIBUTED_CACHE_DIR.getPropertyValue(), key);
-        Path hdfsCacheFilePath = new Path(cahceDir, file.getName());
-        cahceDir.getFileSystem(conf).copyFromLocalFile(file, hdfsCacheFilePath);
+        Path cacheDir = new Path(getCacheDir(conf), key);
+        Path hdfsCacheFilePath = new Path(cacheDir, file.getName());
+        cacheDir.getFileSystem(conf).copyFromLocalFile(file, hdfsCacheFilePath);
 
         return hdfsCacheFilePath;
+    }
+
+    public static void cleanUpCacheDirOnHDFS(Configuration conf, String key) throws IOException {
+        Path cacheDir = new Path(getCacheDir(conf), key);
+        cacheDir.getFileSystem(conf).delete(cacheDir, true);
     }
 
     public static boolean checkJobSuccess(Path outputDir, Configuration conf) throws IOException {

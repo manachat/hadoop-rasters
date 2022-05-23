@@ -25,4 +25,12 @@ public class JobInputConfig {
         datasets.add(config);
         return this;
     }
+
+    public String getOutputDir() {
+        return outputDir;
+    }
+
+    public void setOutputDir(String outputDir) {
+        this.outputDir = outputDir;
+    }
 }

@@ -2,17 +2,19 @@ package vafilonov.hadooprasters.frontend.model.stage.context;
 
 import org.apache.hadoop.conf.Configuration;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContext;
+import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContextCarcass;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.StageResource;
-import vafilonov.hadooprasters.core.util.JobUtils;
 import vafilonov.hadooprasters.frontend.model.json.EnrichedJobInputConfig;
 import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 
 import javax.annotation.Nullable;
 
-public class MetadataInputContext implements HadoopStageContext {
+public class MetadataInputContext extends HadoopStageContextCarcass {
 
     private final EnrichedJobInputConfig enrichedJobInputConfig;
-    private MetadataInputContext(EnrichedJobInputConfig jobConfig) {
+
+    private MetadataInputContext(EnrichedJobInputConfig jobConfig, Configuration conf) {
+        super(conf);
         this.enrichedJobInputConfig = jobConfig;
     }
 
@@ -20,9 +22,9 @@ public class MetadataInputContext implements HadoopStageContext {
         validateConfig(userConfig);
         EnrichedJobInputConfig enriched = enrichConfig(userConfig);
         // get key for upload from enriched config
-        JobUtils.uploadCacheFileToHDFS();
+        //JobUtils.uploadCacheFileToHDFS();
 
-        return new MetadataInputContext(enriched);
+        return new MetadataInputContext(enriched, conf);
     }
 
     private static void validateConfig(JobInputConfig userConfig) {
