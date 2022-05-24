@@ -1,15 +1,21 @@
 package vafilonov.hadooprasters.frontend.model.stage;
 
+import java.util.Random;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopProcessingStage;
+import vafilonov.hadooprasters.core.util.JobUtils;
 import vafilonov.hadooprasters.frontend.model.stage.context.MetadataInputContext;
 import vafilonov.hadooprasters.frontend.model.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.metadata.FileMetadataInputFormat;
 import vafilonov.hadooprasters.mapreduce.map.metadata.MetadataJobMapper;
+import vafilonov.hadooprasters.mapreduce.model.json.DatasetMetainfo;
 import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;
+import vafilonov.hadooprasters.mapreduce.model.types.DatasetId;
 import vafilonov.hadooprasters.mapreduce.output.metadata.FileMetadataOutputFormat;
 import vafilonov.hadooprasters.mapreduce.reduce.metadata.MetadataJobReducer;
 
@@ -25,7 +31,7 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
 
     @Override
     protected String getJobName() {
-        return null;
+        return "Metadata_Job_" + new Random().nextInt(15);
     }
 
     @Override
@@ -33,19 +39,16 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         job.setMapperClass(MetadataJobMapper.class);
         job.setReducerClass(MetadataJobReducer.class);
 
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputKeyClass(DatasetId.class);
+        job.setMapOutputValueClass(BandMetainfo.class);
 
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(BandMetainfo.class);
+        job.setOutputKeyClass(DatasetId.class);
+        job.setOutputValueClass(DatasetMetainfo.class);
 
         job.setInputFormatClass(FileMetadataInputFormat.class);
         job.setOutputFormatClass(FileMetadataOutputFormat.class);
 
-
-        FileOutputFormat.setOutputPath(job, null);
-        throw new RuntimeException("not ready");
-        // set mapper, reducer, input formats
+        FileOutputFormat.setOutputPath(job, new Path(metadataInputContext.getJobInputConfig().getOutputDir(), "metatry_ " + new Random().nextInt(100)));
     }
 
     @Override
@@ -58,6 +61,7 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
 
     @Override
     protected void cleanupJob(Job job, @Nullable MetadataInputContext metadataInputContext) {
-        // delete temp dirs if used
+        // TODO add smth
+
     }
 }

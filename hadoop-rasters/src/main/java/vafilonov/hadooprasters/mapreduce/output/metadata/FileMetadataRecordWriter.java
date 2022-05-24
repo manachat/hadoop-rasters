@@ -8,7 +8,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
 import vafilonov.hadooprasters.mapreduce.model.json.GlobalMetadata;
 import vafilonov.hadooprasters.mapreduce.model.types.DatasetId;
-import vafilonov.hadooprasters.mapreduce.model.types.DatasetMetainfo;
+import vafilonov.hadooprasters.mapreduce.model.json.DatasetMetainfo;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

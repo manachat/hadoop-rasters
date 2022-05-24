@@ -8,6 +8,7 @@ import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 import vafilonov.hadooprasters.frontend.model.stage.DatasetsMetadataProcessingStage;
 import vafilonov.hadooprasters.frontend.model.stage.DatasetsRasterProcessingStage;
 import vafilonov.hadooprasters.frontend.model.stage.context.MetadataInputContext;
+import vafilonov.hadooprasters.frontend.model.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.frontend.model.stage.context.RasterProcessingOutputContext;
 
 import javax.annotation.Nonnull;
@@ -44,7 +45,7 @@ public interface RasterProcessingJob {
 
     class RasterProcessingJobImpl<DType extends Number, Result extends Number> implements RasterProcessingJob {
 
-        private final ProcessingStage<?, RasterProcessingOutputContext> pipeline;
+        private final ProcessingStage<?, MetadataOutputContext> pipeline;
 
         private RasterProcessingJobImpl(
                 Task<DType, Result> processingTask,
@@ -53,8 +54,8 @@ public interface RasterProcessingJob {
         ) {
             pipeline = ProcessingStage
                     .createPipeline(MetadataInputContext.createContextFromJobConfig(jobConfig, clusterConfig))
-                    .thenRun(createMetadataProcessingStage(clusterConfig))
-                    .thenRun(createRasterProcessingStage(clusterConfig));
+                    .thenRun(createMetadataProcessingStage(clusterConfig));
+                    //.thenRun(createRasterProcessingStage(clusterConfig));
         }
 
         private DatasetsMetadataProcessingStage createMetadataProcessingStage(Configuration clusterConfig) {
@@ -67,7 +68,7 @@ public interface RasterProcessingJob {
 
         @Override
         public JobResult executeJob() {
-            ProcessingResult<RasterProcessingOutputContext> result = pipeline.runPipeline();
+            ProcessingResult<MetadataOutputContext> result = pipeline.runPipeline();
             if (result instanceof ProcessingResult.Success) {
                 return JobResult.success();
             } else if (result instanceof ProcessingResult.Failure) {

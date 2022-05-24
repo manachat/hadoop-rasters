@@ -47,8 +47,18 @@ public interface StageResource<ResourceType> {
      */
     class CacheStageResource extends AbstractStageResources<Path> {
 
+        private String key;
+
         public CacheStageResource(Collection<Path> values) {
             super(values);
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
         }
     }
 

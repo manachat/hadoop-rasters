@@ -1,21 +1,68 @@
 {
+  "output_dir": "/user/vafilonov/output",
   "datasets": [
     {
-      "dataset_id": "a",
+      "dataset_id": "dataset_1",
       "bands": [
         {
-          "resolution_m": 10,
-          "location": "/user/vafilonov/data/Forest_12.tif",
+          "resolution_m": 60,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B01_60m.jp2",
           "index": 0
-        }
-      ]
-    }, {
-      "dataset_id": "b",
-      "bands": [
+        },
         {
           "resolution_m": 10,
-          "location": "/user/vafilonov/data/Forest_15.tif",
-          "index": 0
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B02_10m.jp2",
+          "index": 1
+        },
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B03_10m.jp2",
+          "index": 2
+        },
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B04_10m.jp2",
+          "index": 3
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B05_20m.jp2",
+          "index": 4
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B06_20m.jp2",
+          "index": 5
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B07_20m.jp2",
+          "index": 6
+        },
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B08_10m.jp2",
+          "index": 7
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B8A_20m.jp2",
+          "index": 8
+        },
+        {
+          "resolution_m": 60,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B09_60m.jp2",
+          "index": 9
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B11_20m.jp2",
+          "index": 10
+        },
+        {
+          "resolution_m": 20,
+          "location": "/user/vafilonov/data/T33VXF_20220322T101711_B12_20m.jp2",
+          "index": 11
         }
       ]
     }

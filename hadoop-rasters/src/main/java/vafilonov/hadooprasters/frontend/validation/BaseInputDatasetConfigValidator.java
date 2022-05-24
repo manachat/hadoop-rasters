@@ -2,6 +2,7 @@ package vafilonov.hadooprasters.frontend.validation;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 
 import org.apache.hadoop.fs.Path;
@@ -15,10 +16,16 @@ public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInput
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseInputDatasetConfigValidator.class);
 
-    protected static final String PATTERN = "^[a-zA-Z0-9_]{1,30}$";
+    protected static final String PATTERN = "^[a-zA-Z0-9_-]{1,30}$";
 
     @Override
     public void validate(JobInputConfig config) {
+
+        if (config.getOutputDir() == null) {
+            LOG.error("Config lacks output dir");
+            throw new IllegalArgumentException("Output dir not provided.");
+        }
+
         Set<String> datasetIds = new HashSet<>();
 
         for (DatasetConfig dataset : config.getDatasets()) {
@@ -27,7 +34,7 @@ public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInput
     }
 
     private void validateDatasetConfig(DatasetConfig dataset, Set<String> datasetIds) {
-        String datasetId = dataset.getDatasetId();
+        String datasetId = dataset.getDatasetId() == null ? UUID.randomUUID().toString() : dataset.getDatasetId();
         // check name
         if (datasetId != null && !datasetId.matches(PATTERN)) {
             LOG.error("Dataset id {} is null or does not match pattern {}", datasetId, PATTERN);

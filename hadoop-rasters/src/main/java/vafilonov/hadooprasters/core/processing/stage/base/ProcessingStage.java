@@ -57,6 +57,8 @@ public abstract class ProcessingStage<InputContext extends StageContext, OutputC
             return processStageInternal((InputContext) previousResult);
         } catch (Exception ex) {
             return StageContext.failure(ex);
+        } catch (Throwable t ){
+            throw new RuntimeException(t);
         }
     }
 

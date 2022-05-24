@@ -58,19 +58,21 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
+
+            createAndSetupJob(inputContext);
+
             if (inputContext != null) {
                 forwardDirStageResources(inputContext.getDirStageResources());
                 forwardCacheStageResources(inputContext.getCacheStageResources());
             }
 
-            createAndSetupJob(inputContext);
-
             if (!associatedJob.waitForCompletion(true)) {
-                return StageContext.failure("Job " + associatedJob.getJobName() + " failed.");
+
+                return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
             }
 
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+             throw new RuntimeException(e);
         } finally {
             cleanupJob(associatedJob, inputContext);
         }
@@ -85,13 +87,14 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      */
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
-        associatedJob.setJarByClass(HadoopProcessingStage.class);
+        associatedJob.setJarByClass(getClass());
         setupJob(associatedJob, inputContext);
     }
 
     private void forwardDirStageResources(StageResource.DirStageResource resource) throws IOException {
+        Path FS = new Path(associatedJob.getConfiguration().get("fs.defaultFS"));
         for (Path path : resource.getValues()) {
-            FileInputFormat.addInputPath(associatedJob, path);
+            FileInputFormat.addInputPath(associatedJob, new Path(FS, path).getParent());
         }
     }
 
