@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -46,7 +47,10 @@ public class MetadataInputContext extends HadoopStageContextCarcass {
     }
 
     private static void enrichConfig(JobInputConfig userConfig) {
-        // TODO: ??
+        userConfig.getDatasets().stream()
+                .flatMap(d -> d.getBandConfigs().stream())
+                .filter(b -> b.getFileId() == null)
+                .forEach(b -> b.setFileId(UUID.randomUUID().toString()));
     }
 
 

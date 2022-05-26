@@ -35,6 +35,7 @@ public class BaseInputDatasetConfigValidator implements ConfigValidator<JobInput
 
     private void validateDatasetConfig(DatasetConfig dataset, Set<String> datasetIds) {
         String datasetId = dataset.getDatasetId() == null ? UUID.randomUUID().toString() : dataset.getDatasetId();
+        dataset.setDatasetId(datasetId);
         // check name
         if (datasetId != null && !datasetId.matches(PATTERN)) {
             LOG.error("Dataset id {} is null or does not match pattern {}", datasetId, PATTERN);

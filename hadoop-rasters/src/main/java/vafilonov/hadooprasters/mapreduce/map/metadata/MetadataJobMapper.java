@@ -2,6 +2,7 @@ package vafilonov.hadooprasters.mapreduce.map.metadata;
 
 import vafilonov.hadooprasters.core.exception.ResolutionException;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
+import vafilonov.hadooprasters.frontend.model.json.BandConfig;
 import vafilonov.hadooprasters.mapreduce.map.AbstractGeodataMapper;
 import vafilonov.hadooprasters.mapreduce.model.json.BandMetadataJson;
 import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;
@@ -27,21 +28,17 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
         json.setWidth(value.getWidth());
         json.setHeight(value.getHeight());
         double[] geoTransform = value.getDataset().GetGeoTransform(); //1 width; 5 height; [0;3] -- top-left corner
-        if (geoTransform[1] == geoTransform[5]) {
-            json.setResolution((int) geoTransform[1]);
-        } else {
-            throw new ResolutionException("Pixel not square");
-        }
+        json.setResolution(jobInputConfig.getDatasets().stream().flatMap(d -> d.getBandConfigs().stream()).filter(b -> b.getFileId().equals(key.toString())).findFirst().map(BandConfig::getResolutionM).get());
         json.setX((int) geoTransform[0]);
         json.setY((int) geoTransform[3]);
 
         double[] bandStats = new double[2];
-        value.getDataset().GetRasterBand(0).ComputeBandStats(bandStats);
+        value.getDataset().GetRasterBand(1).ComputeBandStats(bandStats);
         json.setMean(bandStats[0]);
         json.setVar(bandStats[1]);
 
         System.out.println(ConfigUtils.MAPPER.writeValueAsString(json));
         // collects metdata, retuns datasetId + JSON Text (or serialized object)
-        context.write(key, new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
+        context.write(new DatasetId("stub"), new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
     }
 }

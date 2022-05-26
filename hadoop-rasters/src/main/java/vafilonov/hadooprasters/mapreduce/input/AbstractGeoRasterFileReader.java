@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,17 +27,25 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
 
     protected JobInputConfig jobInputConfig;
 
+    protected String attemptId;
+
+    protected String localPath;
+
 
     @Override
     public final void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
+
+        attemptId = context.getTaskAttemptID().toString();
+
         Configuration conf = context.getConfiguration();
-        jobInputConfig = ConfigUtils.parseConfig(context.getCacheFiles()[0].getPath());
+
+        jobInputConfig = ConfigUtils.parseConfig(new Path(context.getCacheFiles()[0]), conf);
         Path filepath = ((FileSplit) split).getPath();
         String fileId = ConfigUtils.getFileIdByPath(filepath.toString(), jobInputConfig);
 
-        String file = ensureLocalPath(filepath, conf, context.getTaskAttemptID().toString());
-        Objects.requireNonNull(file);
-        dataset = GdalDataset.loadDataset(file, context.getJobName());
+        localPath = ensureLocalPath(filepath, conf, attemptId);
+        Objects.requireNonNull(localPath);
+        dataset = GdalDataset.loadDataset(localPath, context.getJobName());
         dataset.setFileIdentifier(fileId);
 
         innerInitialize((FileSplit) split, context);
@@ -48,7 +58,12 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
 
     @Override
     public void close() throws IOException {
-        dataset.delete();
+        if (dataset != null) {
+            dataset.delete();
+        }
+        if (localPath != null) {
+            Files.deleteIfExists(Paths.get(localPath));
+        }
     }
 
     /**
@@ -64,9 +79,13 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
         if (filePath.toUri().getScheme().equals("file")) {
             localPath = filePath.toUri().getPath();
         } else {
-            Path tempFile = JobUtils.createAttemptTempFile(conf, attemptId);
-            filePath.getFileSystem(conf).copyToLocalFile(filePath, tempFile);
-            localPath = tempFile.toUri().getPath();
+            File f = File.createTempFile(
+                    "temp-geo-",
+                    filePath.getName().substring(filePath.getName().lastIndexOf("."))
+            );
+            //Path tempFile = JobUtils.createAttemptTempFile(conf, attemptId);
+            filePath.getFileSystem(conf).copyToLocalFile(filePath, new Path(f.getAbsolutePath()));
+            localPath = f.getAbsolutePath();
         }
 
         return localPath;

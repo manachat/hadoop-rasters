@@ -27,6 +27,7 @@ public interface RasterProcessingJob {
         Objects.requireNonNull(clusterAddress);
         Configuration conf = new Configuration();
         conf.set(DEFAULT_FS.getProperty(), clusterAddress + ":" + clusterPort);
+        System.out.println(conf.get("fs.defaultFS"));
         return createJob(processingTask, jobConfig, conf);
     }
 

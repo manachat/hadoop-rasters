@@ -16,7 +16,7 @@ public class UserMain {
                 new File(Main.class.getClassLoader().getResource("json/test_config.json").getFile()),
                 JobInputConfig.class
         );
-        RasterProcessingJob myJob = RasterProcessingJob.createJob((x) -> x.get(0), jobconf, "hdfs://10.128.0.25", 9000);
+        RasterProcessingJob myJob = RasterProcessingJob.createJob((x) -> x.get(0), jobconf, "hdfs://localhost", 9000);
         JobResult res = myJob.executeJob();
 
 

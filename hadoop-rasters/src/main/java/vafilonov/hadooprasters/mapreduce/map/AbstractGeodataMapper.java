@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Mapper;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
 import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
@@ -19,11 +20,17 @@ public abstract class AbstractGeodataMapper<KEYIN, VALIN, KEYOUT, VALOUT> extend
         conf = context.getConfiguration();
 
         cacheUris = context.getCacheFiles();
-        jobInputConfig = ConfigUtils.parseConfig(cacheUris[0].getPath());
+        jobInputConfig = ConfigUtils.parseConfig(new Path(cacheUris[0]), conf);
 
         innerSetup(context);
 
     }
+
+    @Override
+    protected void cleanup(Mapper<KEYIN, VALIN, KEYOUT, VALOUT>.Context context) throws IOException, InterruptedException {
+        super.cleanup(context);
+    }
+
 
     protected void innerSetup(Context context) {
 

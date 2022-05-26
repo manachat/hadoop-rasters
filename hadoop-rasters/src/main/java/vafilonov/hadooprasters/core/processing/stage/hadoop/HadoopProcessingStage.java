@@ -4,6 +4,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import vafilonov.UserMain;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 
@@ -87,14 +88,15 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      */
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
-        associatedJob.setJarByClass(getClass());
+        associatedJob.setJarByClass(UserMain.class);
         setupJob(associatedJob, inputContext);
     }
 
     private void forwardDirStageResources(StageResource.DirStageResource resource) throws IOException {
         Path FS = new Path(associatedJob.getConfiguration().get("fs.defaultFS"));
+        //FileInputFormat.addInputPath(associatedJob, new Path(FS, resource.getValues().iterator().next()).getParent());
         for (Path path : resource.getValues()) {
-            FileInputFormat.addInputPath(associatedJob, new Path(FS, path).getParent());
+            FileInputFormat.addInputPath(associatedJob, new Path(FS, path));
         }
     }
 

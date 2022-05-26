@@ -20,7 +20,8 @@ public class MetadataJobReducer extends AbstractGeodataReducer<DatasetId, BandMe
 
         DatasetMetainfo datasetMetainfo = new DatasetMetainfo();
         for (BandMetainfo metainfo : values) {
-            ConfigUtils.MAPPER.readValue(metainfo.toString(), BandMetadataJson.class);
+            BandMetadataJson b = ConfigUtils.MAPPER.readValue(metainfo.toString(), BandMetadataJson.class);
+            datasetMetainfo.addBandsItem(b);
         }
         datasetMetainfo.setDatasetId(key.toString());
 
