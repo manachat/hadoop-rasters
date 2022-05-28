@@ -47,7 +47,7 @@ public class RasterJobReader extends AbstractGeoRasterFileReader<TilePosition, S
         // we do not allocate direct to have access to underlying array
         short[] data = new short[dataset.getWidth() * dataset.getHeight()];
         dataset.getDataset().GetRasterBand(band.getBandIndex())
-                .ReadRaster(0, 0, dataset.getWidth(), 1, dataset.getWidth(), data);
+                .ReadRaster(0, 0, dataset.getWidth(), dataset.getHeight(), data);
         return new SentinelTile(data, band.getIndex());
     }
 

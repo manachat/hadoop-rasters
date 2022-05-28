@@ -59,7 +59,8 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         // initial files propagate to dirs
         // initial cache propagate to cache
         MetadataOutputContext out = new MetadataOutputContext(metadataInputContext.getJobInputConfig(),
-                job.getConfiguration(),metadataInputContext.getCacheStageResources());
+                job.getConfiguration(),metadataInputContext.getCacheStageResources(), true);
+
         return out;
     }
 

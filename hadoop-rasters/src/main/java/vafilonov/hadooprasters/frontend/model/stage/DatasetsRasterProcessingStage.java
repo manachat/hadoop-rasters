@@ -2,6 +2,7 @@ package vafilonov.hadooprasters.frontend.model.stage;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -10,6 +11,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopProcessingStage;
+import vafilonov.hadooprasters.core.util.JobUtils;
+import vafilonov.hadooprasters.frontend.JobRegistry;
+import vafilonov.hadooprasters.frontend.api.SentinelTask;
+import vafilonov.hadooprasters.frontend.api.Task;
 import vafilonov.hadooprasters.frontend.model.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.frontend.model.stage.context.RasterProcessingOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.raster.RasterJobInputFormat;
@@ -23,10 +28,15 @@ import vafilonov.hadooprasters.mapreduce.reduce.raster.RasterReducer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static vafilonov.hadooprasters.core.util.PropertyConstants.PROCESSING_KEY;
+
 public class DatasetsRasterProcessingStage extends HadoopProcessingStage<MetadataOutputContext, RasterProcessingOutputContext> {
 
-    public DatasetsRasterProcessingStage(Configuration conf) {
+    private final Task<?, ?> processing;
+
+    public DatasetsRasterProcessingStage(Configuration conf, Task<?, ?> processing) {
         super(conf, null);
+        this.processing = processing;
     }
 
     @Override
@@ -48,14 +58,16 @@ public class DatasetsRasterProcessingStage extends HadoopProcessingStage<Metadat
         job.setInputFormatClass(RasterJobInputFormat.class);
         job.setOutputFormatClass(RasterOutputFormat.class);
 
-        FileOutputFormat.setOutputPath(job, new Path(metadataOutputContext.getJobInputConfig().getOutputDir()));
-
+        FileOutputFormat.setOutputPath(job, new Path(metadataOutputContext.getJobInputConfig().getOutputDir(), "result_" + new Random().nextInt(100)));
+        String procKey = UUID.randomUUID().toString();
+        job.getConfiguration().set(PROCESSING_KEY.getProperty(), procKey);
+        JobRegistry.putTask(procKey, processing);
     }
 
     @Override
     protected RasterProcessingOutputContext createOutputContext(Job job, @Nullable MetadataOutputContext metadataOutputContext) {
         // return output dir
-        return new RasterProcessingOutputContext(metadataOutputContext.getJobInputConfig().getOutputDir());
+        return new RasterProcessingOutputContext(job.getConfiguration(), metadataOutputContext.getJobInputConfig().getOutputDir(), true);
     }
 
     @Override

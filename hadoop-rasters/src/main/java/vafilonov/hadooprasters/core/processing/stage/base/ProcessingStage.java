@@ -27,8 +27,9 @@ public abstract class ProcessingStage<InputContext extends StageContext, OutputC
      */
     public final ProcessingResult<OutputContext> runPipeline() {
         StageContext context = processStage();
-        if (context == null) return ProcessingResult.failure(null);
-        if (context.isSuccessFull()) {
+        if (context == null) {
+            return ProcessingResult.failure(null);
+        } else if (context.isSuccessFull()) {
             OutputContext out = (OutputContext) context; // for clearer CCE debug
             return ProcessingResult.success(out);
         } else {

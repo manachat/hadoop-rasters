@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.hadoop.mapreduce.Reducer;
+import vafilonov.hadooprasters.frontend.JobRegistry;
 import vafilonov.hadooprasters.frontend.api.NumberTask;
 import vafilonov.hadooprasters.frontend.api.SentinelTask;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;
 import vafilonov.hadooprasters.mapreduce.model.types.TilePosition;
 import vafilonov.hadooprasters.mapreduce.reduce.AbstractGeodataReducer;
+
+import static vafilonov.hadooprasters.core.util.PropertyConstants.PROCESSING_KEY;
 
 public class RasterReducer extends AbstractGeodataReducer<TilePosition, SentinelTile, TilePosition, ProcessedTile> {
 
@@ -46,5 +50,10 @@ public class RasterReducer extends AbstractGeodataReducer<TilePosition, Sentinel
 
     public void setProcessing(SentinelTask processing) {
         this.processing = processing;
+    }
+
+    @Override
+    protected void innerSetup(Context context) {
+        processing = (SentinelTask) JobRegistry.getTaskById(context.getConfiguration().get(PROCESSING_KEY.getProperty()));
     }
 }

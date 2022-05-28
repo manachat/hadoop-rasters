@@ -3,6 +3,7 @@ package vafilonov.hadooprasters.frontend;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import vafilonov.hadooprasters.frontend.api.SentinelTask;
+import vafilonov.hadooprasters.frontend.api.Task;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class JobRegistry {
 
     private static WeakHashMap<String, Job> JOBS = new WeakHashMap<>();
 
-    private static Map<String, SentinelTask> TASKS = new HashMap<>();
+    private static Map<String, Task> TASKS = new HashMap<>();
 
     public static synchronized String generateJob(Configuration conf) throws IOException {
         String registryJobId = "JOB-" + UUID.randomUUID();
@@ -31,11 +32,11 @@ public class JobRegistry {
     }
 
 
-    public static SentinelTask getTaskById(String id) {
+    public static Task<?, ?> getTaskById(String id) {
         return TASKS.get(id);
     }
 
-    public static void putTask(String id, SentinelTask task) {
+    public static void putTask(String id, Task task) {
         TASKS.put(id, task);
     }
 }

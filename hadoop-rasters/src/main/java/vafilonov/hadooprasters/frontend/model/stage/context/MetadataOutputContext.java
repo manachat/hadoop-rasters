@@ -18,11 +18,18 @@ public class MetadataOutputContext extends HadoopStageContextCarcass {
 
     private final JobInputConfig jobInputConfig;
     private StageResource.CacheStageResource cacheStageResource;
+    private boolean success;
 
-    public MetadataOutputContext(JobInputConfig jobConfig, Configuration conf, StageResource.CacheStageResource cache) {
+    public MetadataOutputContext(
+            JobInputConfig jobConfig,
+            Configuration conf,
+            StageResource.CacheStageResource cache,
+            boolean success
+    ) {
         super(conf);
         this.jobInputConfig = jobConfig;
         this.cacheStageResource = cache;
+        this.success = success;
     }
 
     @Override
@@ -43,7 +50,7 @@ public class MetadataOutputContext extends HadoopStageContextCarcass {
 
     @Override
     public boolean isSuccessFull() {
-        return false;
+        return success;
     }
 
     @Nullable
@@ -54,5 +61,9 @@ public class MetadataOutputContext extends HadoopStageContextCarcass {
 
     public JobInputConfig getJobInputConfig() {
         return jobInputConfig;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

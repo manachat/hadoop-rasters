@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
  * @param <Input>
  * @param <Result>
  */
-public interface NumberTask<Input extends Number, Result extends Number> extends Task<Input, Result>, ParameterizedType {
+public interface NumberTask<Input extends Number, Result extends Number> extends Task<Input, Result> {
 
 
 }

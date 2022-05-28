@@ -19,7 +19,7 @@ import static vafilonov.hadooprasters.core.util.PropertyConstants.DEFAULT_FS;
 public interface RasterProcessingJob {
 
     static <DType extends Number, Result extends Number> RasterProcessingJob createJob(
-            @Nonnull NumberTask<DType, Result> processingTask,
+            @Nonnull SentinelTask processingTask,
             @Nonnull JobInputConfig jobConfig,
             @Nonnull String clusterAddress,
             int clusterPort
@@ -32,7 +32,7 @@ public interface RasterProcessingJob {
     }
 
     static <DType extends Number, Result extends Number> RasterProcessingJob createJob(
-            @Nonnull Task<DType, Result> processingTask,
+            @Nonnull SentinelTask processingTask,
             @Nonnull JobInputConfig jobConfig,
             @Nonnull Configuration clusterConfig
     ) {
@@ -46,7 +46,7 @@ public interface RasterProcessingJob {
 
     class RasterProcessingJobImpl<DType extends Number, Result extends Number> implements RasterProcessingJob {
 
-        private final ProcessingStage<?, MetadataOutputContext> pipeline;
+        private final ProcessingStage<?, RasterProcessingOutputContext> pipeline;
 
         private RasterProcessingJobImpl(
                 Task<DType, Result> processingTask,
@@ -55,22 +55,24 @@ public interface RasterProcessingJob {
         ) {
             pipeline = ProcessingStage
                     .createPipeline(MetadataInputContext.createContextFromJobConfig(jobConfig, clusterConfig))
-                    .thenRun(createMetadataProcessingStage(clusterConfig));
-                    //.thenRun(createRasterProcessingStage(clusterConfig));
+                    .thenRun(createMetadataProcessingStage(clusterConfig))
+                    .thenRun(createRasterProcessingStage(clusterConfig, processingTask));
         }
 
         private DatasetsMetadataProcessingStage createMetadataProcessingStage(Configuration clusterConfig) {
             return new DatasetsMetadataProcessingStage(clusterConfig);
         }
 
-        private DatasetsRasterProcessingStage createRasterProcessingStage(Configuration conf) {
-            return new DatasetsRasterProcessingStage(conf);
+        private DatasetsRasterProcessingStage createRasterProcessingStage(Configuration conf, Task<DType, Result> task) {
+            return new DatasetsRasterProcessingStage(conf, task);
         }
 
         @Override
         public JobResult executeJob() {
-            ProcessingResult<MetadataOutputContext> result = pipeline.runPipeline();
+            ProcessingResult<RasterProcessingOutputContext> result = pipeline.runPipeline();
+            System.out.println(result);
             if (result instanceof ProcessingResult.Success) {
+                System.out.println(((ProcessingResult.Success<RasterProcessingOutputContext>) result).getContext().getOutDir());
                 return JobResult.success();
             } else if (result instanceof ProcessingResult.Failure) {
                 return JobResult.failure();
