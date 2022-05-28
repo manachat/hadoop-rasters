@@ -22,9 +22,9 @@ public class DraftRenderMain {
     public static void main(String[] args) throws Exception {
 
         Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", "hdfs://51.250.14.18:9000");
+        conf.set("fs.defaultFS", "hdfs://localhost:9000");
         System.out.println(conf.get("fs.defaultFS"));
-        conf.set("mapreduce.jobtracker.address", "51.250.14.18:9001");
+        //conf.set("mapreduce.jobtracker.address", "51.250.14.18:9001");
 
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();

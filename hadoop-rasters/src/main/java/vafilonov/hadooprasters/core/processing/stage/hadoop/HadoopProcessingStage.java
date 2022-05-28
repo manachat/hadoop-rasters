@@ -4,6 +4,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import vafilonov.UserMain;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 
@@ -38,7 +39,7 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      * Make needed adjustments and enhancements to job:
      * set output dir, mapper/reducer classes, input formats, etc.
      */
-    protected abstract void setupJob(Job job, @Nullable InputContext inputContext);
+    protected abstract void setupJob(Job job, @Nullable InputContext inputContext) throws IOException;
 
     /**
      * creates output context upon job successful completion
@@ -58,19 +59,21 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
+
+            createAndSetupJob(inputContext);
+
             if (inputContext != null) {
                 forwardDirStageResources(inputContext.getDirStageResources());
                 forwardCacheStageResources(inputContext.getCacheStageResources());
             }
 
-            createAndSetupJob(inputContext);
-
             if (!associatedJob.waitForCompletion(true)) {
-                return StageContext.failure("Job " + associatedJob.getJobName() + " failed.");
+
+                return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
             }
 
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+             throw new RuntimeException(e);
         } finally {
             cleanupJob(associatedJob, inputContext);
         }
@@ -85,13 +88,15 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      */
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
-        associatedJob.setJarByClass(HadoopProcessingStage.class);
+        associatedJob.setJarByClass(UserMain.class);
         setupJob(associatedJob, inputContext);
     }
 
     private void forwardDirStageResources(StageResource.DirStageResource resource) throws IOException {
+        Path FS = new Path(associatedJob.getConfiguration().get("fs.defaultFS"));
+        //FileInputFormat.addInputPath(associatedJob, new Path(FS, resource.getValues().iterator().next()).getParent());
         for (Path path : resource.getValues()) {
-            FileInputFormat.addInputPath(associatedJob, path);
+            FileInputFormat.addInputPath(associatedJob, new Path(FS, path));
         }
     }
 
