@@ -8,8 +8,11 @@ import javax.annotation.Nullable;
 
 public class RasterProcessingOutputContext extends HadoopStageContextCarcass {
 
-    public RasterProcessingOutputContext() {
+    private String outDir;
+
+    public RasterProcessingOutputContext(String out) {
         super(null);
+        outDir = out;
     }
 
     @Override
@@ -31,5 +34,9 @@ public class RasterProcessingOutputContext extends HadoopStageContextCarcass {
     @Override
     public Throwable getCause() {
         return null;
+    }
+
+    public String getOutDir() {
+        return outDir;
     }
 }

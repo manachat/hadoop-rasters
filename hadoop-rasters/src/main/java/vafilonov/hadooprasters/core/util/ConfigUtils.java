@@ -34,7 +34,7 @@ public class ConfigUtils {
     }
 
     @Nullable
-    public static String getFileIdByPath(String path, JobInputConfig config) {
+    public static BandConfig getBandByPath(String path, JobInputConfig config) {
 
         if (path.startsWith("hdfs://")) {
             path = path.substring(path.indexOf('/',7));
@@ -44,7 +44,6 @@ public class ConfigUtils {
                 .flatMap(d -> d.getBandConfigs().stream())
                 .filter(b -> b.getLocation().equals(p))
                 .findFirst()
-                .map(BandConfig::getFileId)
                 .orElse(null);
     }
 

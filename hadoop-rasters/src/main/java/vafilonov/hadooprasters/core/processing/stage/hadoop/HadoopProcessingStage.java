@@ -39,7 +39,7 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      * Make needed adjustments and enhancements to job:
      * set output dir, mapper/reducer classes, input formats, etc.
      */
-    protected abstract void setupJob(Job job, @Nullable InputContext inputContext);
+    protected abstract void setupJob(Job job, @Nullable InputContext inputContext) throws IOException;
 
     /**
      * creates output context upon job successful completion

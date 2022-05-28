@@ -16,6 +16,9 @@ public class BandConfig {
     @JsonProperty("file_id")
     private String fileId;
 
+    @JsonProperty("band_index")
+    private int bandIndex;
+
     public int getResolutionM() {
         return resolutionM;
     }
@@ -46,5 +49,13 @@ public class BandConfig {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
+    }
+
+    public int getBandIndex() {
+        return bandIndex;
+    }
+
+    public void setBandIndex(int bandIndex) {
+        this.bandIndex = bandIndex;
     }
 }

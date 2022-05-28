@@ -1,5 +1,6 @@
 package vafilonov.hadooprasters.frontend.model.stage;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
 
 public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<MetadataInputContext, MetadataOutputContext> {
 
+    private Path outdir;
 
     public DatasetsMetadataProcessingStage(Configuration conf) {
         super(conf, null);
@@ -47,8 +49,8 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
 
         job.setInputFormatClass(FileMetadataInputFormat.class);
         job.setOutputFormatClass(FileMetadataOutputFormat.class);
-
-        FileOutputFormat.setOutputPath(job, new Path(metadataInputContext.getJobInputConfig().getOutputDir(), "metatry_ " + new Random().nextInt(100)));
+        outdir = new Path(JobUtils.getTempDir(job.getConfiguration()), "metatry_" + new Random().nextInt(300));
+        FileOutputFormat.setOutputPath(job, outdir);
     }
 
     @Override
@@ -56,12 +58,19 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         // get data from assemble file and pass to next cache
         // initial files propagate to dirs
         // initial cache propagate to cache
-        return null;
+        MetadataOutputContext out = new MetadataOutputContext(metadataInputContext.getJobInputConfig(),
+                job.getConfiguration(),metadataInputContext.getCacheStageResources());
+        return out;
     }
 
     @Override
     protected void cleanupJob(Job job, @Nullable MetadataInputContext metadataInputContext) {
-        // TODO add smth
+
+        try {
+            outdir.getFileSystem(job.getConfiguration()).delete(outdir, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

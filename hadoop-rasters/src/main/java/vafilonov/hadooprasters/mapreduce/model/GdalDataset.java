@@ -19,13 +19,15 @@ public class GdalDataset {
     private int width;
     private int height;
 
+    private int bandIndex;
+
     private GdalDataset() { }
 
     public void delete() {
         dataset.delete();
     }
 
-    public static GdalDataset loadDataset(String path, String jobId) {
+    public static GdalDataset loadDataset(String path, String jobId, int bandIdx) {
         Dataset dataset = null;
         GdalDataset ds = new GdalDataset();
 
@@ -39,6 +41,7 @@ public class GdalDataset {
 
             ds.width = (int) width;
             ds.height = (int) height;
+            ds.bandIndex = bandIdx;
 
             ds.fileIdentifier = jobId + "_" + UUID.randomUUID();
         } catch (Exception ex) {
@@ -73,4 +76,7 @@ public class GdalDataset {
         return height;
     }
 
+    public int getBandIndex() {
+        return bandIndex;
+    }
 }

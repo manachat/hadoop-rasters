@@ -16,8 +16,13 @@ public class UserMain {
                 new File(Main.class.getClassLoader().getResource("json/test_config.json").getFile()),
                 JobInputConfig.class
         );
-        RasterProcessingJob myJob = RasterProcessingJob.createJob((x) -> x.get(0), jobconf, "hdfs://localhost", 9000);
+        RasterProcessingJob myJob = RasterProcessingJob.createJob((x) -> x.get(0), jobconf, "hdfs://10.128.0.25", 9000);
+        long start = System.currentTimeMillis();
         JobResult res = myJob.executeJob();
+        long end = System.currentTimeMillis() - start;
+
+        System.out.println(end);
+        System.out.println(end / 12.);
 
 
     }

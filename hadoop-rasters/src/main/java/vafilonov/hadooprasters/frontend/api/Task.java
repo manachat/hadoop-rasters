@@ -11,5 +11,5 @@ import java.util.ArrayList;
 @FunctionalInterface
 public interface Task<Input, Result> {
 
-    Result process(@Nonnull ArrayList<Input> inputs);
+    Result process(@Nonnull Input[] inputs);
 }

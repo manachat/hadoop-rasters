@@ -12,7 +12,10 @@ import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
 public abstract class AbstractGeodataReducer<KEYIN, VALIN, KEYOUT, VALOUT> extends Reducer<KEYIN, VALIN, KEYOUT, VALOUT> {
     protected Configuration conf;
     protected URI[] cacheUris;
+
     protected JobInputConfig jobInputConfig;
+
+
 
     @Override
     public final void setup(Context context) throws IOException {

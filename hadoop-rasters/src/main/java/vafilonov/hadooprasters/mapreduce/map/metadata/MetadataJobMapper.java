@@ -33,7 +33,7 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
         json.setY((int) geoTransform[3]);
 
         double[] bandStats = new double[2];
-        value.getDataset().GetRasterBand(1).ComputeBandStats(bandStats);
+        value.getDataset().GetRasterBand(value.getBandIndex()).ComputeBandStats(bandStats);
         json.setMean(bandStats[0]);
         json.setVar(bandStats[1]);
 
