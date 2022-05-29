@@ -67,9 +67,9 @@ public class MetadataInputContext extends HadoopStageContextCarcass {
 
     @Override
     public StageResource.CacheStageResource getCacheStageResources() {
-        File f = null;
+        File f;
         try {
-            f = File.createTempFile("temp_cahce_", ".json");
+            f = File.createTempFile("temp_cache_", ".json");
             try (FileWriter fw = new FileWriter(f)) {
                 fw.write(ConfigUtils.MAPPER.writeValueAsString(jobInputConfig));
             }

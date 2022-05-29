@@ -21,8 +21,7 @@ public class UserMain {
         JobResult res = myJob.executeJob();
         long end = System.currentTimeMillis() - start;
 
-        System.out.println(end);
-        System.out.println(end / 12.);
+        System.out.println(end / 1000 + "s");
 
 
     }
