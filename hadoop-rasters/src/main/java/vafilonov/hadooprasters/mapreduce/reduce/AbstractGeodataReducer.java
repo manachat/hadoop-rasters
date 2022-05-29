@@ -7,7 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Reducer;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
-import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
+import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 public abstract class AbstractGeodataReducer<KEYIN, VALIN, KEYOUT, VALOUT> extends Reducer<KEYIN, VALIN, KEYOUT, VALOUT> {
     protected Configuration conf;
@@ -22,7 +22,7 @@ public abstract class AbstractGeodataReducer<KEYIN, VALIN, KEYOUT, VALOUT> exten
         conf = context.getConfiguration();
 
         cacheUris = context.getCacheFiles();
-        jobInputConfig = ConfigUtils.parseConfig(new Path(cacheUris[0]), conf);
+        jobInputConfig = ConfigUtils.parseConfig(new Path(cacheUris[1]), conf);
 
         innerSetup(context);
 

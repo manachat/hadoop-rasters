@@ -1,8 +1,7 @@
 package vafilonov.hadooprasters.mapreduce.map.metadata;
 
-import vafilonov.hadooprasters.core.exception.ResolutionException;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
-import vafilonov.hadooprasters.frontend.model.json.BandConfig;
+import vafilonov.hadooprasters.core.model.json.BandConfig;
 import vafilonov.hadooprasters.mapreduce.map.AbstractGeodataMapper;
 import vafilonov.hadooprasters.mapreduce.model.json.BandMetadataJson;
 import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;

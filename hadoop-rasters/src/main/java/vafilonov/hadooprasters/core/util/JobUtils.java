@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
-import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
+import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.DISTRIBUTED_CACHE_DIR;
 import static vafilonov.hadooprasters.core.util.PropertyConstants.TEMP_DIR;
@@ -50,8 +47,9 @@ public class JobUtils {
         tempDirPath.getFileSystem(conf).delete(tempDirPath, true);
     }
 
-    public static Path uploadCacheFileToHDFS(Path file, Configuration conf, String key) throws IOException {
-        Path cacheDir = new Path(getCacheDir(conf), key);
+    public static Path uploadCacheFileToHDFS(Path file, Configuration conf) throws IOException {
+        System.out.println("Uploading cache");
+        Path cacheDir = getCacheDir(conf);
         Path hdfsCacheFilePath = new Path(cacheDir, file.getName());
         cacheDir.getFileSystem(conf).copyFromLocalFile(file, hdfsCacheFilePath);
 
@@ -65,6 +63,23 @@ public class JobUtils {
 
     public static boolean checkJobSuccess(Path outputDir, Configuration conf) throws IOException {
         return outputDir.getFileSystem(conf).exists(new Path(outputDir, SUCCESS_FILENAME));
+    }
+
+    public static void loadLibs(Path file, Configuration conf) throws IOException {
+        File f = null;
+        JobInputConfig res;
+        try {
+            f = File.createTempFile("dist", "c");
+            file.getFileSystem(conf).copyToLocalFile(file, new Path(f.getAbsolutePath()));
+            System.load(f.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException(e);
+        } finally {
+            if (f != null) {
+                f.delete();
+            }
+        }
     }
 
 

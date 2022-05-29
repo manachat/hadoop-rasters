@@ -9,9 +9,6 @@ import org.gdal.gdal.gdal;
 
 public class GdalDataset {
 
-    static {
-        gdal.AllRegister();
-    }
 
     private String fileIdentifier;
     private Dataset dataset;
@@ -28,6 +25,7 @@ public class GdalDataset {
     }
 
     public static GdalDataset loadDataset(String path, String jobId, int bandIdx) {
+        gdal.AllRegister();
         Dataset dataset = null;
         GdalDataset ds = new GdalDataset();
 

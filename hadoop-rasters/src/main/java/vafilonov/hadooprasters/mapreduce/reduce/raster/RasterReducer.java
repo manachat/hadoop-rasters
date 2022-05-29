@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.hadoop.mapreduce.Reducer;
-import vafilonov.hadooprasters.frontend.JobRegistry;
-import vafilonov.hadooprasters.frontend.api.NumberTask;
-import vafilonov.hadooprasters.frontend.api.SentinelTask;
+import vafilonov.hadooprasters.core.JobRegistry;
+import vafilonov.hadooprasters.api.SentinelTask;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;
 import vafilonov.hadooprasters.mapreduce.model.types.TilePosition;

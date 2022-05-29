@@ -33,7 +33,7 @@ public class RasterJobReader extends AbstractGeoRasterFileReader<TilePosition, S
     @Override
     public TilePosition getCurrentKey() throws IOException, InterruptedException {
         TilePosition key = new TilePosition();
-        key.setDatasetId(dataset.getFileIdentifier());
+        key.setDatasetId(datasetConfig.getDatasetId());
         Dataset ds = dataset.getDataset();
         key.setResolution(band.getResolutionM());
         key.setOffset(0);

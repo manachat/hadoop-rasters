@@ -12,9 +12,9 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import vafilonov.hadooprasters.mapreduce.map.StringMetadataMapper;
 import vafilonov.hadooprasters.mapreduce.input.metadata.FileMetadataInputFormat;
 import vafilonov.hadooprasters.core.util.JobUtils;
-import vafilonov.hadooprasters.frontend.validation.BaseInputDatasetConfigValidator;
-import vafilonov.hadooprasters.frontend.validation.ConfigValidator;
-import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
+import vafilonov.hadooprasters.core.validation.BaseInputDatasetConfigValidator;
+import vafilonov.hadooprasters.core.validation.ConfigValidator;
+import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 import java.io.File;
 import java.net.URI;
@@ -52,7 +52,7 @@ public class Main {
 
 		URL url = Main.class.getClassLoader().getResource("json/test_config.json");
 		URI uri_1 = url.toURI();
-		System.out.println(JobUtils.uploadCacheFileToHDFS(new Path(uri_1), conf, "Biba"));
+		System.out.println(JobUtils.uploadCacheFileToHDFS(new Path(uri_1), conf));
 
 		GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
 		String[] remainingArgs = optionParser.getRemainingArgs();

@@ -11,7 +11,10 @@ import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
+
+import static vafilonov.hadooprasters.core.util.PropertyConstants.DEFAULT_FS;
 
 public abstract class HadoopProcessingStage<InputContext extends HadoopStageContext, OutputContext extends HadoopStageContext>
         extends ProcessingStage<InputContext, OutputContext> {
@@ -59,16 +62,19 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
-
+            System.out.println("internal stage processing " + getJobName() );
             createAndSetupJob(inputContext);
-
+            System.err.println("created job");
             if (inputContext != null) {
+                System.err.println("forwarding resources");
                 forwardDirStageResources(inputContext.getDirStageResources());
                 forwardCacheStageResources(inputContext.getCacheStageResources());
             }
-
+            System.err.println("running");
             if (!associatedJob.waitForCompletion(true)) {
-
+                System.out.println(associatedJob.getStatus());
+                System.out.println(associatedJob.toString());
+                System.out.println(associatedJob.getCluster().getFileSystem().toString());
                 return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
             }
 
@@ -89,6 +95,8 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
         associatedJob.setJarByClass(UserMain.class);
+        URI uri = URI.create(conf.get(DEFAULT_FS.getProperty()) + "/libraries/libgdalalljni.so#libgdalalljni.so");
+        associatedJob.addCacheFile(uri);
         setupJob(associatedJob, inputContext);
     }
 
