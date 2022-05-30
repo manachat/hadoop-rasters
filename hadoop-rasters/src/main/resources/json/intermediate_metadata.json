@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "location": "/path/to/file",
+      "dataset_id": "string",
+      "resolution": 99,
+      "index": 0,
+      "min_resolution": 10,
+      "offsetX_m": 10,
+      "offsetY_m": 10,
+      "width_m" : 100,
+      "height_m": 50,
+      "mean": 0.5,
+      "var": 0.4
+    }
+  ]
+}

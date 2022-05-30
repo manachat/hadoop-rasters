@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
+import vafilonov.hadooprasters.core.model.json.BandConfig;
 
 public class GdalDataset {
 
@@ -17,6 +18,8 @@ public class GdalDataset {
     private int height;
 
     private int bandIndex;
+
+    private BandConfig bandConf;
 
     private GdalDataset() { }
 
@@ -76,5 +79,13 @@ public class GdalDataset {
 
     public int getBandIndex() {
         return bandIndex;
+    }
+
+    public BandConfig getBandConf() {
+        return bandConf;
+    }
+
+    public void setBandConf(BandConfig bandConf) {
+        this.bandConf = bandConf;
     }
 }

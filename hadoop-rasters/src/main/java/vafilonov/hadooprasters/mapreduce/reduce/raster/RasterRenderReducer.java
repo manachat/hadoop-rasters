@@ -14,7 +14,7 @@ import vafilonov.hadooprasters.mapreduce.reduce.AbstractGeodataReducer;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.PROCESSING_KEY;
 
-public class RasterReducer extends AbstractGeodataReducer<TilePosition, SentinelTile, TilePosition, ProcessedTile> {
+public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, SentinelTile, TilePosition, ProcessedTile> {
 
     @Override
     protected void reduce(TilePosition key, Iterable<SentinelTile> values, Context context)

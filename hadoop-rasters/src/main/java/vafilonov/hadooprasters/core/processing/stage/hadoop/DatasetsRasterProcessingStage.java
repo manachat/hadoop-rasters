@@ -13,12 +13,12 @@ import vafilonov.hadooprasters.api.Task;
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.core.processing.stage.context.RasterProcessingOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.raster.RasterJobInputFormat;
-import vafilonov.hadooprasters.mapreduce.map.raster.RasterJobMapper;
+import vafilonov.hadooprasters.mapreduce.map.raster.RasterRenderMapper;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;
 import vafilonov.hadooprasters.mapreduce.model.types.TilePosition;
 import vafilonov.hadooprasters.mapreduce.output.raster.RasterOutputFormat;
-import vafilonov.hadooprasters.mapreduce.reduce.raster.RasterReducer;
+import vafilonov.hadooprasters.mapreduce.reduce.raster.RasterRenderReducer;
 
 import javax.annotation.Nullable;
 
@@ -42,8 +42,8 @@ public class DatasetsRasterProcessingStage extends HadoopProcessingStage<Metadat
 
     @Override
     protected void setupJob(Job job, @Nullable MetadataOutputContext metadataOutputContext) {
-        job.setMapperClass(RasterJobMapper.class);
-        job.setReducerClass(RasterReducer.class);
+        job.setMapperClass(RasterRenderMapper.class);
+        job.setReducerClass(RasterRenderReducer.class);
 
         job.setMapOutputKeyClass(TilePosition.class);
         job.setMapOutputValueClass(SentinelTile.class);

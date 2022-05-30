@@ -25,8 +25,7 @@ public class TilePosition implements WritableComparable<TilePosition> {
             throw new NullPointerException();
         } else if (this == o) {
             return 0;
-        } else if (this.x == o.x && this.y == o.y && this.datasetId.equals(o.datasetId) &&
-                this.width == o.width && this.height == o.height) {
+        } else if (this.datasetId.equals(o.datasetId)) {
             return 0;
         } else {
             if (this.y < o.y) {

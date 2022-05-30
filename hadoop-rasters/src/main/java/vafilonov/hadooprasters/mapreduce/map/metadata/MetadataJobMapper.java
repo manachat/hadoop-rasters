@@ -23,11 +23,19 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
     @Override
     protected void map(DatasetId key, GdalDataset value, Context context) throws IOException, InterruptedException {
 
+        BandConfig band = value.getBandConf();
+
         BandMetadataJson json = new BandMetadataJson();
+
+        json.setLocation(band.getLocation());
+        json.setDatasetId(key.toString());
+        json.setResolution(band.getResolutionM());
+        json.setIndex(band.getIndex());
+        json.setBandIndex(band.getBandIndex());
+
         json.setWidth(value.getWidth());
         json.setHeight(value.getHeight());
         double[] geoTransform = value.getDataset().GetGeoTransform(); //1 width; 5 height; [0;3] -- top-left corner
-        json.setResolution(jobInputConfig.getDatasets().stream().flatMap(d -> d.getBandConfigs().stream()).filter(b -> b.getFileId().equals(key.toString())).findFirst().map(BandConfig::getResolutionM).get());
         json.setX((int) geoTransform[0]);
         json.setY((int) geoTransform[3]);
 
@@ -38,6 +46,6 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
 
         System.out.println(ConfigUtils.MAPPER.writeValueAsString(json));
         // collects metdata, retuns datasetId + JSON Text (or serialized object)
-        context.write(new DatasetId("stub"), new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
+        context.write(key, new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
     }
 }

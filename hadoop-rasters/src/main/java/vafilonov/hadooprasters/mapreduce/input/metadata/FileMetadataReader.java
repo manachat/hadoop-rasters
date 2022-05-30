@@ -40,7 +40,7 @@ public class FileMetadataReader extends AbstractGeoRasterFileReader<DatasetId, G
 
     @Override
     public DatasetId getCurrentKey() throws IOException, InterruptedException {
-        return new DatasetId(dataset.getFileIdentifier());
+        return new DatasetId(datasetConfig.getDatasetId());
     }
 
     @Override

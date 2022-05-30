@@ -39,7 +39,6 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
     @Override
     public final void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
 
-        System.out.println("=====================================================================================================INITIALIZE=============================================");
         attemptId = context.getTaskAttemptID().toString();
 
         System.out.println(Arrays.toString(context.getCacheFiles()));
@@ -56,6 +55,7 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
         Objects.requireNonNull(localPath);
         dataset = GdalDataset.loadDataset(localPath, context.getJobName(), band.getBandIndex());
         dataset.setFileIdentifier(band.getFileId());
+        dataset.setBandConf(band);
 
         innerInitialize((FileSplit) split, context);
     }
