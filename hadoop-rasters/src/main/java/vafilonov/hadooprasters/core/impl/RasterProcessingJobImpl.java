@@ -12,12 +12,12 @@ import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsRasterProces
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataInputContext;
 import vafilonov.hadooprasters.core.processing.stage.context.RasterProcessingOutputContext;
 
-public class RasterProcessingJobImpl<DType extends Number, Result extends Number> implements RasterProcessingJob {
+public class RasterProcessingJobImpl<DType extends Number, Result extends Number, Context> implements RasterProcessingJob {
 
     private final ProcessingStage<?, RasterProcessingOutputContext> pipeline;
 
     public RasterProcessingJobImpl(
-            Task<DType, Result> processingTask,
+            Task<DType, Result, Context> processingTask,
             JobInputConfig jobConfig,
             Configuration clusterConfig
     ) {
@@ -31,7 +31,7 @@ public class RasterProcessingJobImpl<DType extends Number, Result extends Number
         return new DatasetsMetadataProcessingStage(clusterConfig);
     }
 
-    private DatasetsRasterProcessingStage createRasterProcessingStage(Configuration conf, Task<DType, Result> task) {
+    private DatasetsRasterProcessingStage createRasterProcessingStage(Configuration conf, Task<DType, Result, Context> task) {
         return new DatasetsRasterProcessingStage(conf, task);
     }
 

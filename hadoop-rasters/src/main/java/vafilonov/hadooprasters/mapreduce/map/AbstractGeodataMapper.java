@@ -11,28 +11,5 @@ import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 public abstract class AbstractGeodataMapper<KEYIN, VALIN, KEYOUT, VALOUT> extends Mapper<KEYIN, VALIN, KEYOUT, VALOUT> {
 
-    protected Configuration conf;
-    protected URI[] cacheUris;
-    protected JobInputConfig jobInputConfig;
 
-    @Override
-    public final void setup(Context context) throws IOException {
-        conf = context.getConfiguration();
-
-        cacheUris = context.getCacheFiles();
-        jobInputConfig = ConfigUtils.parseConfig(new Path(cacheUris[1]), conf);
-
-        innerSetup(context);
-
-    }
-
-    @Override
-    protected void cleanup(Mapper<KEYIN, VALIN, KEYOUT, VALOUT>.Context context) throws IOException, InterruptedException {
-        super.cleanup(context);
-    }
-
-
-    protected void innerSetup(Context context) {
-
-    }
 }

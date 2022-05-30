@@ -24,11 +24,11 @@ public class OffsetCalculator {
         } else if (band10info != null && band60info != null) {
             return computeOffsets10and60(band10info, band60info);
         } else if (band10info != null) {
-            return new int[] {band10info[WIDTH_IDX], band10info[HEIGHT_IDX], 0,0,0,0,0,0};
+            return new int[] {band10info[WIDTH_IDX]*RES10, band10info[HEIGHT_IDX]*RES10, 0,0,0,0,0,0};
         } else if (band20info != null) {
-            return new int[] {band20info[WIDTH_IDX], band20info[HEIGHT_IDX], 0,0,0,0,0,0};
+            return new int[] {band20info[WIDTH_IDX]*RES10, band20info[HEIGHT_IDX]*RES10, 0,0,0,0,0,0};
         } else if (band60info != null) {
-            return new int[] {band60info[WIDTH_IDX], band60info[HEIGHT_IDX], 0,0,0,0,0,0};
+            return new int[] {band60info[WIDTH_IDX]*RES10, band60info[HEIGHT_IDX]*RES10, 0,0,0,0,0,0};
         } else {
             throw new IllegalStateException("Not enough bands.");
         }

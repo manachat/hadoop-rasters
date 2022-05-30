@@ -25,15 +25,11 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
 
     protected GdalDataset dataset;
 
-    protected JobInputConfig jobInputConfig;
+    protected String localPath;
 
-    protected BandConfig band;
-
-    protected DatasetConfig datasetConfig;
+    protected Configuration conf;
 
     protected String attemptId;
-
-    protected String localPath;
 
 
     @Override
@@ -43,26 +39,15 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
 
         System.out.println(Arrays.toString(context.getCacheFiles()));
 
-        Configuration conf = context.getConfiguration();
+        conf = context.getConfiguration();
         registerGdal(new Path(context.getCacheFiles()[0]), conf);
-        jobInputConfig = ConfigUtils.parseConfig(new Path(context.getCacheFiles()[1]), conf);
-        Path filepath = ((FileSplit) split).getPath();
-        Pair<BandConfig, DatasetConfig> bd = ConfigUtils.getBandByPath(filepath.toString(), jobInputConfig);;
-        band = bd.getLeft();
-        datasetConfig = bd.getRight();
-
-        localPath = ensureLocalPath(filepath, conf, attemptId);
-        Objects.requireNonNull(localPath);
-        dataset = GdalDataset.loadDataset(localPath, context.getJobName(), band.getBandIndex());
-        dataset.setFileIdentifier(band.getFileId());
-        dataset.setBandConf(band);
 
         innerInitialize((FileSplit) split, context);
     }
 
 
 
-    protected abstract void innerInitialize(FileSplit split, TaskAttemptContext context);
+    protected abstract void innerInitialize(FileSplit split, TaskAttemptContext context) throws IOException;
 
 
     @Override

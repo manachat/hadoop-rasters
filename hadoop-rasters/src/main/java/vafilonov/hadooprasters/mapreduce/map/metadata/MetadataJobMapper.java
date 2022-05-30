@@ -23,7 +23,7 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
     @Override
     protected void map(DatasetId key, GdalDataset value, Context context) throws IOException, InterruptedException {
 
-        BandConfig band = value.getBandConf();
+        BandConfig band = (BandConfig) value.getBandConf();
 
         BandMetadataJson json = new BandMetadataJson();
 
@@ -48,4 +48,7 @@ public class MetadataJobMapper extends AbstractGeodataMapper<DatasetId, GdalData
         // collects metdata, retuns datasetId + JSON Text (or serialized object)
         context.write(key, new BandMetainfo(ConfigUtils.MAPPER.writeValueAsString(json)));
     }
+
+
+
 }

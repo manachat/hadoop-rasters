@@ -77,14 +77,14 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
                 System.out.println(associatedJob.getCluster().getFileSystem().toString());
                 return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
             }
-
+            return createOutputContext(associatedJob, inputContext);
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
              throw new RuntimeException(e);
         } finally {
             cleanupJob(associatedJob, inputContext);
         }
 
-        return createOutputContext(associatedJob, inputContext);
+
     }
 
     /**

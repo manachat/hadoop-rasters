@@ -31,7 +31,7 @@ public class JobRegistry {
     }
 
 
-    public static Task<?, ?> getTaskById(String id) {
+    public static Task<?, ?, ?> getTaskById(String id) {
         return TASKS.get(id);
     }
 

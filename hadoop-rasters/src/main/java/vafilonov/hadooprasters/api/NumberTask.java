@@ -5,7 +5,7 @@ package vafilonov.hadooprasters.api;
  * @param <Input>
  * @param <Result>
  */
-public interface NumberTask<Input extends Number, Result extends Number> extends Task<Input, Result> {
+public interface NumberTask<Input extends Number, Result extends Number, Context> extends Task<Input, Result, Context> {
 
 
 }

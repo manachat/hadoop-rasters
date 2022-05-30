@@ -11,19 +11,20 @@ public class RasterRenderMapper extends AbstractGeodataMapper<TilePosition, Sent
     @Override
     protected void map(TilePosition key, SentinelTile value, Context context) throws IOException, InterruptedException {
         int preOffset = key.getOffset();
-        int scale = key.getResolution() / 10; // min
+        int scale = key.getResolution() / key.getMinResolution(); // min
 
         TilePosition newKey = new TilePosition();
         newKey.setHeight(key.getHeight() * scale);
         newKey.setWidth(key.getWidth() * scale);
         newKey.setOffset(preOffset * scale * scale);
-        newKey.setResolution(10);
+        newKey.setResolution(key.getMinResolution());
         newKey.setX(key.getX());
         newKey.setY(key.getY());
         newKey.setDatasetId(key.getDatasetId());
 
         SentinelTile newVal = new SentinelTile(scaleDownValues(value.getData(), scale, key.getWidth()), value.getIndex());
-
+        newVal.setMean(value.getMean());
+        newVal.setVar(value.getVar());
         context.write(newKey, newVal);
 
     }

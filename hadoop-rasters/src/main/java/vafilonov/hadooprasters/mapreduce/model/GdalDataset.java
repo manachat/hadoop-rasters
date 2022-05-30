@@ -19,7 +19,7 @@ public class GdalDataset {
 
     private int bandIndex;
 
-    private BandConfig bandConf;
+    private Object bandConf;
 
     private GdalDataset() { }
 
@@ -81,11 +81,11 @@ public class GdalDataset {
         return bandIndex;
     }
 
-    public BandConfig getBandConf() {
+    public Object getBandConf() {
         return bandConf;
     }
 
-    public void setBandConf(BandConfig bandConf) {
+    public void setBandConf(Object bandConf) {
         this.bandConf = bandConf;
     }
 }

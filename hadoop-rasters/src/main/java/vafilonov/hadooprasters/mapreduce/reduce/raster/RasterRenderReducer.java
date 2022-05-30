@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import vafilonov.hadooprasters.api.StatisticContext;
 import vafilonov.hadooprasters.core.JobRegistry;
 import vafilonov.hadooprasters.api.SentinelTask;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
@@ -29,9 +30,18 @@ public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, Se
         int[] results = new int[tiles.get(0).getLen()];
         Short[] portion = new Short[tiles.size()];
 
+        StatisticContext closureContext = new StatisticContext() {
+            public double getMean(int i) {
+                return tiles.get(i).getMean();
+            }
+            public double getVar(int i) {
+                return tiles.get(i).getVar();
+            }
+        };
+
         for (int i = 0; i < results.length; i++) {
             fillPortion(portion, tiles, i);
-            results[i] = processing.process(portion);
+            results[i] = processing.process(portion, closureContext);
         }
 
         ProcessedTile tile = new ProcessedTile(results, key.getOffset());

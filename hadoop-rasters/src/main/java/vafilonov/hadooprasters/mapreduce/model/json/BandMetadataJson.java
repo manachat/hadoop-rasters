@@ -180,4 +180,26 @@ public class BandMetadataJson {
     public void setHeightM(int heightM) {
         this.heightM = heightM;
     }
+
+    @Override
+    public String toString() {
+        return "BandMetadataJson{" +
+                "location='" + location + '\'' +
+                ", datasetId='" + datasetId + '\'' +
+                ", resolution=" + resolution +
+                ", index=" + index +
+                ", bandIndex=" + bandIndex +
+                ", minResolution=" + minResolution +
+                ", offsetXM=" + offsetXM +
+                ", offsetYM=" + offsetYM +
+                ", widthM=" + widthM +
+                ", heightM=" + heightM +
+                ", width=" + width +
+                ", height=" + height +
+                ", x=" + x +
+                ", y=" + y +
+                ", mean=" + mean +
+                ", var=" + var +
+                '}';
+    }
 }

@@ -10,19 +10,11 @@ import vafilonov.hadooprasters.core.util.ConfigUtils;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 public abstract class AbstractGeodataReducer<KEYIN, VALIN, KEYOUT, VALOUT> extends Reducer<KEYIN, VALIN, KEYOUT, VALOUT> {
-    protected Configuration conf;
-    protected URI[] cacheUris;
-
-    protected JobInputConfig jobInputConfig;
 
 
 
     @Override
     public final void setup(Context context) throws IOException {
-        conf = context.getConfiguration();
-
-        cacheUris = context.getCacheFiles();
-        jobInputConfig = ConfigUtils.parseConfig(new Path(cacheUris[1]), conf);
 
         innerSetup(context);
 

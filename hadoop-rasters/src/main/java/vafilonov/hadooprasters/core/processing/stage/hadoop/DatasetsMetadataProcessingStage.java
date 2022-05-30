@@ -1,6 +1,7 @@
 package vafilonov.hadooprasters.core.processing.stage.hadoop;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
@@ -12,7 +13,7 @@ import vafilonov.hadooprasters.core.processing.stage.context.MetadataInputContex
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.metadata.FileMetadataInputFormat;
 import vafilonov.hadooprasters.mapreduce.map.metadata.MetadataJobMapper;
-import vafilonov.hadooprasters.mapreduce.model.json.DatasetMetainfo;
+import vafilonov.hadooprasters.mapreduce.model.json.BandMetadataJson;
 import vafilonov.hadooprasters.mapreduce.model.types.BandMetainfo;
 import vafilonov.hadooprasters.mapreduce.model.types.DatasetId;
 import vafilonov.hadooprasters.mapreduce.output.metadata.FileMetadataOutputFormat;
@@ -43,7 +44,7 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         job.setMapOutputValueClass(BandMetainfo.class);
 
         job.setOutputKeyClass(DatasetId.class);
-        job.setOutputValueClass(DatasetMetainfo.class);
+        job.setOutputValueClass(BandMetadataJson.class);
 
         job.setInputFormatClass(FileMetadataInputFormat.class);
         job.setOutputFormatClass(FileMetadataOutputFormat.class);
@@ -57,7 +58,7 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
         // initial files propagate to dirs
         // initial cache propagate to cache
         MetadataOutputContext out = new MetadataOutputContext(metadataInputContext.getJobInputConfig(),
-                job.getConfiguration(),metadataInputContext.getCacheStageResources(), true);
+                job.getConfiguration(), new StageResource.CacheStageResource(Collections.singletonList(outdir)), true);
 
         return out;
     }
@@ -65,11 +66,6 @@ public class DatasetsMetadataProcessingStage extends HadoopProcessingStage<Metad
     @Override
     protected void cleanupJob(Job job, @Nullable MetadataInputContext metadataInputContext) {
 
-        try {
-            outdir.getFileSystem(job.getConfiguration()).delete(outdir, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 }

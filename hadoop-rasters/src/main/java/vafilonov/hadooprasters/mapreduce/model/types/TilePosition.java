@@ -17,6 +17,7 @@ public class TilePosition implements WritableComparable<TilePosition> {
     private int height;
     private int offset;
     private int resolution;
+    private int minResolution;
 
 
     @Override
@@ -50,6 +51,7 @@ public class TilePosition implements WritableComparable<TilePosition> {
         out.writeInt(height);
         out.writeInt(offset);
         out.writeInt(resolution);
+        out.writeInt(minResolution);
 
         new Text(datasetId).write(out);
     }
@@ -62,6 +64,7 @@ public class TilePosition implements WritableComparable<TilePosition> {
         height = in.readInt();
         offset = in.readInt();
         resolution = in.readInt();
+        minResolution = in.readInt();
         Text fileId = new Text();
         fileId.readFields(in);
         this.datasetId = fileId.toString();
@@ -121,5 +124,13 @@ public class TilePosition implements WritableComparable<TilePosition> {
 
     public void setResolution(int resolution) {
         this.resolution = resolution;
+    }
+
+    public int getMinResolution() {
+        return minResolution;
+    }
+
+    public void setMinResolution(int minResolution) {
+        this.minResolution = minResolution;
     }
 }

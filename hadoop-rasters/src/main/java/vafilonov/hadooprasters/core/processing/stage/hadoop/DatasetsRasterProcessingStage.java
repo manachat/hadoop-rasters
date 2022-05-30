@@ -26,11 +26,11 @@ import static vafilonov.hadooprasters.core.util.PropertyConstants.PROCESSING_KEY
 
 public class DatasetsRasterProcessingStage extends HadoopProcessingStage<MetadataOutputContext, RasterProcessingOutputContext> {
 
-    private final Task<?, ?> processing;
+    private final Task<?, ?, ?> processing;
 
     private String generatedOutdir;
 
-    public DatasetsRasterProcessingStage(Configuration conf, Task<?, ?> processing) {
+    public DatasetsRasterProcessingStage(Configuration conf, Task<?, ?, ?> processing) {
         super(conf, null);
         this.processing = processing;
     }

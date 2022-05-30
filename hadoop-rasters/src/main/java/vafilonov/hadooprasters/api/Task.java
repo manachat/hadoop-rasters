@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  * @param <Result>
  */
 @FunctionalInterface
-public interface Task<Input, Result> {
+public interface Task<Input, Result, Context> {
 
-    Result process(@Nonnull Input[] inputs);
+    Result process(@Nonnull Input[] inputs, Context context);
 }

@@ -7,7 +7,7 @@
         {
           "resolution_m": 10,
           "location": "/user/vafilonov/sentinel2/Forest_12_2.tif",
-          "index": 0,
+          "index": 2,
           "band_index": 2
         },
         {
@@ -19,7 +19,7 @@
         {
           "resolution_m": 10,
           "location": "/user/vafilonov/sentinel2/Forest_12_4.tif",
-          "index": 2,
+          "index": 0,
           "band_index": 4
         }
       ]
