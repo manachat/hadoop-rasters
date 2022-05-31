@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.mapreduce;
+package vafilonov.hadooprasters.mapreduce.input;
 
 import java.io.IOException;
 
