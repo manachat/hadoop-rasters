@@ -1,7 +1,5 @@
 package vafilonov.hadooprasters.core.processing.stage.base;
 
-import vafilonov.hadooprasters.core.util.exception.JobFailException;
-
 import javax.annotation.Nullable;
 
 public interface StageContext {
@@ -22,7 +20,7 @@ public interface StageContext {
     }
 
     static FailContext failure(String message) {
-        return new FailContext(new JobFailException(message));
+        return new FailContext(new RuntimeException(message));
     }
 
     static FailContext failure(Throwable t) {
