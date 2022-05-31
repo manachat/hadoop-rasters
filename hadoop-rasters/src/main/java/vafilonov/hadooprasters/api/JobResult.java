@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.model.job;
+package vafilonov.hadooprasters.api;
 
 public interface JobResult {
 

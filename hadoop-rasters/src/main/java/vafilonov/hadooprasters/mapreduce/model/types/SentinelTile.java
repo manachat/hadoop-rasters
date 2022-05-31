@@ -89,4 +89,11 @@ public class SentinelTile implements Writable {
     public void setVar(double var) {
         this.var = var;
     }
+
+    public SentinelTile copy() {
+        SentinelTile newTile = new SentinelTile(data, index);
+        newTile.setMean(mean);
+        newTile.setVar(var);
+        return newTile;
+    }
 }

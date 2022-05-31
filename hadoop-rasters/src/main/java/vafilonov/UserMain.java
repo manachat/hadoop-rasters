@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import vafilonov.hadooprasters.api.RasterProcessingJob;
 import vafilonov.hadooprasters.api.StatisticContext;
-import vafilonov.hadooprasters.core.model.job.JobResult;
+import vafilonov.hadooprasters.api.JobResult;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 public class UserMain {
@@ -43,7 +43,7 @@ public class UserMain {
 
     }
 
-    private static int renderRGB(Short[] bands, StatisticContext context) {
+    private int renderRGB(Short[] bands, StatisticContext context) {
         int stdnum = 3;
         double redMin = context.getMean(0) - stdnum*context.getVar(0);
         double redMax = context.getMean(0) + stdnum*context.getVar(0);

@@ -3,6 +3,7 @@ package vafilonov.hadooprasters.mapreduce.reduce.raster;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import vafilonov.hadooprasters.api.StatisticContext;
@@ -22,9 +23,15 @@ public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, Se
             throws IOException, InterruptedException {
 
         List<SentinelTile> tiles = new ArrayList<>();
-        for (SentinelTile tile : values) {
+
+        Iterator<SentinelTile> iter = values.iterator();
+        while (iter.hasNext()) {
+            SentinelTile tile = iter.next().copy();
             tiles.add(tile);
         }
+        //for (SentinelTile tile : values) {
+        //    tiles.add(tile);
+        //}
         tiles.sort(Comparator.comparingInt(SentinelTile::getIndex));
 
         int[] results = new int[tiles.get(0).getLen()];
@@ -52,7 +59,7 @@ public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, Se
 
     private void fillPortion(Short[] portion, List<SentinelTile> tiles, int idx) {
         for (int i = 0; i < portion.length; i++) {
-            portion[i] = tiles.get(0).getData()[idx];
+            portion[i] = tiles.get(i).getData()[idx];
         }
     }
 

@@ -5,7 +5,7 @@ import vafilonov.hadooprasters.core.processing.stage.base.ProcessingResult;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.api.RasterProcessingJob;
 import vafilonov.hadooprasters.api.Task;
-import vafilonov.hadooprasters.core.model.job.JobResult;
+import vafilonov.hadooprasters.api.JobResult;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsMetadataProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsRasterProcessingStage;
