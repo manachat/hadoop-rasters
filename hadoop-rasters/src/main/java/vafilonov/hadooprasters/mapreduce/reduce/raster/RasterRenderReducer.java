@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import vafilonov.hadooprasters.api.StatisticContext;
+import vafilonov.hadooprasters.api.Task;
 import vafilonov.hadooprasters.core.util.JobRegistry;
 import vafilonov.hadooprasters.api.SentinelTask;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
@@ -55,7 +56,7 @@ public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, Se
         context.write(key, tile);
     }
 
-    private SentinelTask processing;
+    private Task<Short, Integer, StatisticContext> processing;
 
     private void fillPortion(Short[] portion, List<SentinelTile> tiles, int idx) {
         for (int i = 0; i < portion.length; i++) {
@@ -69,6 +70,6 @@ public class RasterRenderReducer extends AbstractGeodataReducer<TilePosition, Se
 
     @Override
     protected void innerSetup(Context context) {
-        processing = (SentinelTask) JobRegistry.getTaskById(context.getConfiguration().get(PROCESSING_KEY.getProperty()));
+        processing = (Task<Short, Integer, StatisticContext>) JobRegistry.getTaskById(context.getConfiguration().get(PROCESSING_KEY.getProperty()));
     }
 }
