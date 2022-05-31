@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.validation;
+package vafilonov.hadooprasters.core.util.validation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;

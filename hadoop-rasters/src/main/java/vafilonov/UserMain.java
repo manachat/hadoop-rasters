@@ -43,7 +43,7 @@ public class UserMain {
 
     }
 
-    private int renderRGB(Short[] bands, StatisticContext context) {
+    private static int renderRGB(Short[] bands, StatisticContext context) {
         int stdnum = 3;
         double redMin = context.getMean(0) - stdnum*context.getVar(0);
         double redMax = context.getMean(0) + stdnum*context.getVar(0);

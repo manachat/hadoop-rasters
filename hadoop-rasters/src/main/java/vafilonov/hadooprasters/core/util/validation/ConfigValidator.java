@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.validation;
+package vafilonov.hadooprasters.core.util.validation;
 
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 

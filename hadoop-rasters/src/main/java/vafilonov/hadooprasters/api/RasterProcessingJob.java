@@ -1,7 +1,7 @@
 package vafilonov.hadooprasters.api;
 
 import org.apache.hadoop.conf.Configuration;
-import vafilonov.hadooprasters.core.impl.RasterProcessingJobImpl;
+import vafilonov.hadooprasters.core.processing.impl.RasterProcessingJobImpl;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 import javax.annotation.Nonnull;

@@ -6,12 +6,12 @@ import vafilonov.hadooprasters.core.processing.stage.hadoop.StageResource;
 
 import javax.annotation.Nullable;
 
-public class RasterProcessingOutputContext extends HadoopStageContextCarcass {
+public class RasterRenderingOutputContext extends HadoopStageContextCarcass {
 
     private String outDir;
     private final boolean success;
 
-    public RasterProcessingOutputContext(Configuration conf, String out, boolean success) {
+    public RasterRenderingOutputContext(Configuration conf, String out, boolean success) {
         super(conf);
         outDir = out;
         this.success = success;

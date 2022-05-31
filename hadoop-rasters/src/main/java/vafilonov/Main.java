@@ -12,8 +12,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import vafilonov.hadooprasters.mapreduce.map.StringMetadataMapper;
 import vafilonov.hadooprasters.mapreduce.input.metadata.FileMetadataInputFormat;
 import vafilonov.hadooprasters.core.util.JobUtils;
-import vafilonov.hadooprasters.core.validation.BaseInputDatasetConfigValidator;
-import vafilonov.hadooprasters.core.validation.ConfigValidator;
+import vafilonov.hadooprasters.core.util.validation.BaseInputDatasetConfigValidator;
+import vafilonov.hadooprasters.core.util.validation.ConfigValidator;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
 import java.io.File;

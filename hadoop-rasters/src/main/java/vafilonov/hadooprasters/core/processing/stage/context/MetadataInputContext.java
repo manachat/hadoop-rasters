@@ -17,8 +17,8 @@ import vafilonov.hadooprasters.core.util.JobUtils;
 import vafilonov.hadooprasters.core.model.json.BandConfig;
 import vafilonov.hadooprasters.core.model.json.DatasetConfig;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
-import vafilonov.hadooprasters.core.validation.BaseInputDatasetConfigValidator;
-import vafilonov.hadooprasters.core.validation.ConfigValidator;
+import vafilonov.hadooprasters.core.util.validation.BaseInputDatasetConfigValidator;
+import vafilonov.hadooprasters.core.util.validation.ConfigValidator;
 
 import javax.annotation.Nullable;
 

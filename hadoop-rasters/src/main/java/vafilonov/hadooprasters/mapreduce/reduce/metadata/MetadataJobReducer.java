@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vafilonov.hadooprasters.core.exception.ResolutionException;
+import vafilonov.hadooprasters.core.util.exception.ResolutionException;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
 import vafilonov.hadooprasters.core.util.OffsetCalculator;
 import vafilonov.hadooprasters.mapreduce.model.json.BandMetadataJson;

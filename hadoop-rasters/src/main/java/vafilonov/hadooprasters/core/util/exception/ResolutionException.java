@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.exception;
+package vafilonov.hadooprasters.core.util.exception;
 
 public class ResolutionException extends RuntimeException {
 

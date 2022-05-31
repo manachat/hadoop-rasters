@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core;
+package vafilonov.hadooprasters.core.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;

@@ -8,10 +8,10 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import vafilonov.hadooprasters.core.JobRegistry;
+import vafilonov.hadooprasters.core.util.JobRegistry;
 import vafilonov.hadooprasters.api.Task;
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataOutputContext;
-import vafilonov.hadooprasters.core.processing.stage.context.RasterProcessingOutputContext;
+import vafilonov.hadooprasters.core.processing.stage.context.RasterRenderingOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.raster.RasterJobInputFormat;
 import vafilonov.hadooprasters.mapreduce.map.raster.RasterRenderMapper;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
@@ -24,13 +24,13 @@ import javax.annotation.Nullable;
 
 import static vafilonov.hadooprasters.core.util.PropertyConstants.PROCESSING_KEY;
 
-public class DatasetsRasterProcessingStage extends HadoopProcessingStage<MetadataOutputContext, RasterProcessingOutputContext> {
+public class DatasetsRasterRenderProcessingStage extends HadoopProcessingStage<MetadataOutputContext, RasterRenderingOutputContext> {
 
     private final Task<?, ?, ?> processing;
 
     private String generatedOutdir;
 
-    public DatasetsRasterProcessingStage(Configuration conf, Task<?, ?, ?> processing) {
+    public DatasetsRasterRenderProcessingStage(Configuration conf, Task<?, ?, ?> processing) {
         super(conf, null);
         this.processing = processing;
     }
@@ -62,9 +62,9 @@ public class DatasetsRasterProcessingStage extends HadoopProcessingStage<Metadat
     }
 
     @Override
-    protected RasterProcessingOutputContext createOutputContext(Job job, @Nullable MetadataOutputContext metadataOutputContext) {
+    protected RasterRenderingOutputContext createOutputContext(Job job, @Nullable MetadataOutputContext metadataOutputContext) {
         // return output dir
-        return new RasterProcessingOutputContext(job.getConfiguration(), generatedOutdir, true);
+        return new RasterRenderingOutputContext(job.getConfiguration(), generatedOutdir, true);
     }
 
     @Override

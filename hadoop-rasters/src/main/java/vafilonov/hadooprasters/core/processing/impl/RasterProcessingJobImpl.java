@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.impl;
+package vafilonov.hadooprasters.core.processing.impl;
 
 import org.apache.hadoop.conf.Configuration;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingResult;
@@ -8,13 +8,13 @@ import vafilonov.hadooprasters.api.Task;
 import vafilonov.hadooprasters.api.JobResult;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsMetadataProcessingStage;
-import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsRasterProcessingStage;
+import vafilonov.hadooprasters.core.processing.stage.hadoop.DatasetsRasterRenderProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataInputContext;
-import vafilonov.hadooprasters.core.processing.stage.context.RasterProcessingOutputContext;
+import vafilonov.hadooprasters.core.processing.stage.context.RasterRenderingOutputContext;
 
 public class RasterProcessingJobImpl<DType extends Number, Result extends Number, Context> implements RasterProcessingJob {
 
-    private final ProcessingStage<?, RasterProcessingOutputContext> pipeline;
+    private final ProcessingStage<?, RasterRenderingOutputContext> pipeline;
 
     public RasterProcessingJobImpl(
             Task<DType, Result, Context> processingTask,
@@ -31,16 +31,16 @@ public class RasterProcessingJobImpl<DType extends Number, Result extends Number
         return new DatasetsMetadataProcessingStage(clusterConfig);
     }
 
-    private DatasetsRasterProcessingStage createRasterProcessingStage(Configuration conf, Task<DType, Result, Context> task) {
-        return new DatasetsRasterProcessingStage(conf, task);
+    private DatasetsRasterRenderProcessingStage createRasterProcessingStage(Configuration conf, Task<DType, Result, Context> task) {
+        return new DatasetsRasterRenderProcessingStage(conf, task);
     }
 
     @Override
     public JobResult executeJob() {
-        ProcessingResult<RasterProcessingOutputContext> result = pipeline.runPipeline();
+        ProcessingResult<RasterRenderingOutputContext> result = pipeline.runPipeline();
         System.out.println(result);
         if (result instanceof ProcessingResult.Success) {
-            System.out.println(((ProcessingResult.Success<RasterProcessingOutputContext>) result).getContext().getOutDir());
+            System.out.println(((ProcessingResult.Success<RasterRenderingOutputContext>) result).getContext().getOutDir());
             return JobResult.success();
         } else if (result instanceof ProcessingResult.Failure) {
             return JobResult.failure();

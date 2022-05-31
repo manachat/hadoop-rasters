@@ -62,20 +62,14 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
-            System.out.println("internal stage processing " + getJobName() );
             createAndSetupJob(inputContext);
-            System.err.println("created job");
             if (inputContext != null) {
-                System.err.println("forwarding resources");
                 forwardDirStageResources(inputContext.getDirStageResources());
                 forwardCacheStageResources(inputContext.getCacheStageResources());
             }
-            System.err.println("running");
+
             if (!associatedJob.waitForCompletion(true)) {
-                System.out.println(associatedJob.getStatus());
-                System.out.println(associatedJob.toString());
-                System.out.println(associatedJob.getCluster().getFileSystem().toString());
-                return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
+                return StageContext.failure("Job " + associatedJob.getJobName() + " failed.");
             }
             return createOutputContext(associatedJob, inputContext);
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
@@ -83,7 +77,6 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
         } finally {
             cleanupJob(associatedJob, inputContext);
         }
-
 
     }
 

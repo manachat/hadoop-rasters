@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import vafilonov.hadooprasters.api.StatisticContext;
-import vafilonov.hadooprasters.core.JobRegistry;
+import vafilonov.hadooprasters.core.util.JobRegistry;
 import vafilonov.hadooprasters.api.SentinelTask;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;

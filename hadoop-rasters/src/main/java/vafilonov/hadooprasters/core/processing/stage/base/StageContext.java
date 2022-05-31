@@ -1,6 +1,6 @@
 package vafilonov.hadooprasters.core.processing.stage.base;
 
-import vafilonov.hadooprasters.core.exception.JobFailException;
+import vafilonov.hadooprasters.core.util.exception.JobFailException;
 
 import javax.annotation.Nullable;
 

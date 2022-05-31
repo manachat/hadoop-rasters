@@ -1,4 +1,4 @@
-package vafilonov.hadooprasters.core.validation;
+package vafilonov.hadooprasters.core.util.validation;
 
 import java.util.HashSet;
 import java.util.Set;
