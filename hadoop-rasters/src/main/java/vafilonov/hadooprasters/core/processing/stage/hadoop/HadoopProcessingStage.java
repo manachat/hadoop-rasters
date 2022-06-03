@@ -4,7 +4,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import vafilonov.UserMain;
+import vafilonov.UserMainRender;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 
@@ -87,7 +87,7 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      */
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
-        associatedJob.setJarByClass(UserMain.class);
+        associatedJob.setJarByClass(UserMainRender.class);
         URI uri = URI.create(conf.get(DEFAULT_FS.getProperty()) + "/libraries/libgdalalljni.so#libgdalalljni.so");
         associatedJob.addCacheFile(uri);
         setupJob(associatedJob, inputContext);

@@ -13,7 +13,7 @@ import vafilonov.hadooprasters.api.Task;
 import vafilonov.hadooprasters.core.processing.stage.context.MetadataOutputContext;
 import vafilonov.hadooprasters.core.processing.stage.context.RasterRenderingOutputContext;
 import vafilonov.hadooprasters.mapreduce.input.raster.RasterJobInputFormat;
-import vafilonov.hadooprasters.mapreduce.map.raster.RasterRenderMapper;
+import vafilonov.hadooprasters.mapreduce.map.raster.RasterExtractorMapper;
 import vafilonov.hadooprasters.mapreduce.model.types.ProcessedTile;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;
 import vafilonov.hadooprasters.mapreduce.model.types.TilePosition;
@@ -42,7 +42,7 @@ public class DatasetsRasterRenderProcessingStage extends HadoopProcessingStage<M
 
     @Override
     protected void setupJob(Job job, @Nullable MetadataOutputContext metadataOutputContext) {
-        job.setMapperClass(RasterRenderMapper.class);
+        job.setMapperClass(RasterExtractorMapper.class);
         job.setReducerClass(RasterRenderReducer.class);
 
         job.setMapOutputKeyClass(TilePosition.class);
@@ -59,6 +59,7 @@ public class DatasetsRasterRenderProcessingStage extends HadoopProcessingStage<M
         String procKey = UUID.randomUUID().toString();
         job.getConfiguration().set(PROCESSING_KEY.getProperty(), procKey);
         JobRegistry.putTask(procKey, processing);
+        generatedOutdir = metadataOutputContext.getJobInputConfig().getOutputDir() + "/" + generatedOutdir;
     }
 
     @Override

@@ -6,7 +6,7 @@ import vafilonov.hadooprasters.mapreduce.map.AbstractGeodataMapper;
 import vafilonov.hadooprasters.mapreduce.model.types.SentinelTile;
 import vafilonov.hadooprasters.mapreduce.model.types.TilePosition;
 
-public class RasterRenderMapper extends AbstractGeodataMapper<TilePosition, SentinelTile, TilePosition, SentinelTile> {
+public class RasterExtractorMapper extends AbstractGeodataMapper<TilePosition, SentinelTile, TilePosition, SentinelTile> {
 
     @Override
     protected void map(TilePosition key, SentinelTile value, Context context) throws IOException, InterruptedException {

@@ -3,7 +3,6 @@ package vafilonov.hadooprasters.core.processing.stage.context;
 import javax.annotation.Nullable;
 
 import org.apache.hadoop.conf.Configuration;
-import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContext;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.HadoopStageContextCarcass;
 import vafilonov.hadooprasters.core.processing.stage.hadoop.StageResource;
 
@@ -20,7 +19,7 @@ public class CSVExtractionOutputContext extends HadoopStageContextCarcass {
 
     @Override
     public boolean isSuccessFull() {
-        return false;
+        return success;
     }
 
     @Nullable
@@ -37,5 +36,9 @@ public class CSVExtractionOutputContext extends HadoopStageContextCarcass {
     @Override
     public StageResource.CacheStageResource getCacheStageResources() {
         return null;
+    }
+
+    public String getOutDir() {
+        return outDir;
     }
 }

@@ -9,7 +9,7 @@ import vafilonov.hadooprasters.api.StatisticContext;
 import vafilonov.hadooprasters.api.JobResult;
 import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 
-public class UserMain {
+public class UserMainRender {
 
     public static void main(String[] args) throws Exception {
 
@@ -28,12 +28,12 @@ public class UserMain {
 
         if (jobconf == null) {
             jobconf = mapper.readValue(
-                    new File(Main.class.getClassLoader().getResource("json/homogenous_config.json").getFile()),
+                    new File(Main.class.getClassLoader().getResource("json/bunkovo_config.json").getFile()),
                     JobInputConfig.class
             );
         }
 
-        RasterProcessingJob myJob = RasterProcessingJob.createJob(UserMain::renderRGB, jobconf, address, port);
+        RasterProcessingJob myJob = RasterProcessingJob.createJob(UserMainRender::renderRGB, jobconf, address, port);
         long start = System.currentTimeMillis();
         JobResult res = myJob.executeJob();
         long end = System.currentTimeMillis() - start;
