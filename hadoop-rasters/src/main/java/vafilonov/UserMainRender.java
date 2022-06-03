@@ -1,9 +1,13 @@
 package vafilonov;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import vafilonov.hadooprasters.api.CSVProcessingJob;
 import vafilonov.hadooprasters.api.RasterProcessingJob;
 import vafilonov.hadooprasters.api.StatisticContext;
 import vafilonov.hadooprasters.api.JobResult;
@@ -12,10 +16,10 @@ import vafilonov.hadooprasters.core.model.json.JobInputConfig;
 public class UserMainRender {
 
     public static void main(String[] args) throws Exception {
-
-        String config = args[0];
-        String address = args[1];
-        int port = Integer.parseInt(args[2]);
+        String mode = args[0];
+        String config = args[1];
+        String address = args[2];
+        int port = Integer.parseInt(args[3]);
 
 
         ObjectMapper mapper = new JsonMapper();
@@ -33,14 +37,35 @@ public class UserMainRender {
             );
         }
 
+        if (mode.equalsIgnoreCase("parse")) {
+            parseJob(jobconf, address, port);
+        } else {
+            rasterJob(jobconf, address, port);
+        }
+
+
+    }
+
+    private static void parseJob(JobInputConfig jobconf, String address, int port) {
+        CSVProcessingJob myJob = CSVProcessingJob.createJob(UserMainRender::createCsvString, jobconf, address, port);
+        long start = System.currentTimeMillis();
+        JobResult res = myJob.executeJob();
+        long end = System.currentTimeMillis() - start;
+
+        System.out.println(end / 1000 + "s");
+    }
+
+    private static void rasterJob(JobInputConfig jobconf, String address, int port) {
         RasterProcessingJob myJob = RasterProcessingJob.createJob(UserMainRender::renderRGB, jobconf, address, port);
         long start = System.currentTimeMillis();
         JobResult res = myJob.executeJob();
         long end = System.currentTimeMillis() - start;
 
         System.out.println(end / 1000 + "s");
+    }
 
-
+    private static String createCsvString(Short[] bands, StatisticContext context) {
+        return Arrays.stream(bands).map(Objects::toString).collect(Collectors.joining(","));
     }
 
     private static int renderRGB(Short[] bands, StatisticContext context) {
