@@ -4,30 +4,32 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import vafilonov.hadooprasters.core.model.json.DatasetConfig;
 import vafilonov.hadooprasters.core.util.ConfigUtils;
-import vafilonov.hadooprasters.frontend.model.json.BandConfig;
-import vafilonov.hadooprasters.frontend.model.json.JobInputConfig;
+import vafilonov.hadooprasters.core.model.json.BandConfig;
+import vafilonov.hadooprasters.core.model.json.JobInputConfig;
+import vafilonov.hadooprasters.core.util.JobUtils;
 import vafilonov.hadooprasters.mapreduce.model.GdalDataset;
 
 public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends RecordReader<KeyType, ValueType> {
 
     protected GdalDataset dataset;
 
-    protected JobInputConfig jobInputConfig;
+    protected String localPath;
 
-    protected BandConfig band;
+    protected Configuration conf;
 
     protected String attemptId;
-
-    protected String localPath;
 
 
     @Override
@@ -35,23 +37,17 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
 
         attemptId = context.getTaskAttemptID().toString();
 
-        Configuration conf = context.getConfiguration();
+        System.out.println(Arrays.toString(context.getCacheFiles()));
 
-        jobInputConfig = ConfigUtils.parseConfig(new Path(context.getCacheFiles()[0]), conf);
-        Path filepath = ((FileSplit) split).getPath();
-        band = ConfigUtils.getBandByPath(filepath.toString(), jobInputConfig);
-
-        localPath = ensureLocalPath(filepath, conf, attemptId);
-        Objects.requireNonNull(localPath);
-        dataset = GdalDataset.loadDataset(localPath, context.getJobName(), band.getBandIndex());
-        dataset.setFileIdentifier(band.getFileId());
+        conf = context.getConfiguration();
+        registerGdal(new Path(context.getCacheFiles()[0]), conf);
 
         innerInitialize((FileSplit) split, context);
     }
 
 
 
-    protected abstract void innerInitialize(FileSplit split, TaskAttemptContext context);
+    protected abstract void innerInitialize(FileSplit split, TaskAttemptContext context) throws IOException;
 
 
     @Override
@@ -87,5 +83,9 @@ public abstract class AbstractGeoRasterFileReader<KeyType, ValueType> extends Re
         }
 
         return localPath;
+    }
+
+    protected void registerGdal(Path p, Configuration conf) throws IOException {
+        JobUtils.loadLibs(p, conf);
     }
 }

@@ -1,0 +1,28 @@
+{
+  "output_dir": "/user/vafilonov/output",
+  "datasets": [
+    {
+      "dataset_id": "dataset_1",
+      "bands": [
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/bunkovo/bunkovo_20_b2.tif",
+          "index": 2,
+          "band_index": 1
+        },
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/bunkovo/bunkovo_20_b3.tif",
+          "index": 1,
+          "band_index": 1
+        },
+        {
+          "resolution_m": 10,
+          "location": "/user/vafilonov/bunkovo/bunkovo_20_b4.tif",
+          "index": 0,
+          "band_index": 1
+        }
+      ]
+    }
+  ]
+}

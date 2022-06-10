@@ -12,6 +12,10 @@ public class SentinelTile implements Writable {
 
     private int len;
 
+    private double mean;
+
+    private double var;
+
     private short[] data;
 
     public SentinelTile() { }
@@ -26,6 +30,8 @@ public class SentinelTile implements Writable {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(index);
+        out.writeDouble(mean);
+        out.writeDouble(var);
         out.writeInt(len);
         for (int i = 0; i < len; i++) {
             out.writeShort(data[i]);
@@ -35,6 +41,8 @@ public class SentinelTile implements Writable {
     @Override
     public void readFields(DataInput in) throws IOException {
         index = in.readInt();
+        mean = in.readDouble();
+        var = in.readDouble();
         len = in.readInt();
         data = new short[len];
         for (int i = 0; i < len; i++) {
@@ -64,5 +72,28 @@ public class SentinelTile implements Writable {
 
     public void setData(short[] data) {
         this.data = data;
+    }
+
+    public double getMean() {
+        return mean;
+    }
+
+    public void setMean(double mean) {
+        this.mean = mean;
+    }
+
+    public double getVar() {
+        return var;
+    }
+
+    public void setVar(double var) {
+        this.var = var;
+    }
+
+    public SentinelTile copy() {
+        SentinelTile newTile = new SentinelTile(data, index);
+        newTile.setMean(mean);
+        newTile.setVar(var);
+        return newTile;
     }
 }

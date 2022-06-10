@@ -6,20 +6,17 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import vafilonov.hadooprasters.mapreduce.input.GeoRasterInputFormat;
 import vafilonov.hadooprasters.mapreduce.model.types.DatasetId;
 import vafilonov.hadooprasters.mapreduce.model.GdalDataset;
 
 /**
  * Input format for raster files to be processed by metadata collector job
  */
-public class FileMetadataInputFormat extends FileInputFormat<DatasetId, GdalDataset> {
+public class FileMetadataInputFormat extends GeoRasterInputFormat<DatasetId, GdalDataset> {
     @Override
     public RecordReader<DatasetId, GdalDataset> createRecordReader(InputSplit split, TaskAttemptContext context) {
         return new FileMetadataReader();
     }
 
-    @Override
-    protected boolean isSplitable(JobContext context, Path filename) {
-        return false;
-    }
 }

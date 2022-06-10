@@ -6,12 +6,10 @@ import javax.annotation.Nonnull;
 
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.gdal;
+import vafilonov.hadooprasters.core.model.json.BandConfig;
 
 public class GdalDataset {
 
-    static {
-        gdal.AllRegister();
-    }
 
     private String fileIdentifier;
     private Dataset dataset;
@@ -21,6 +19,8 @@ public class GdalDataset {
 
     private int bandIndex;
 
+    private Object bandConf;
+
     private GdalDataset() { }
 
     public void delete() {
@@ -28,6 +28,7 @@ public class GdalDataset {
     }
 
     public static GdalDataset loadDataset(String path, String jobId, int bandIdx) {
+        gdal.AllRegister();
         Dataset dataset = null;
         GdalDataset ds = new GdalDataset();
 
@@ -78,5 +79,13 @@ public class GdalDataset {
 
     public int getBandIndex() {
         return bandIndex;
+    }
+
+    public Object getBandConf() {
+        return bandConf;
+    }
+
+    public void setBandConf(Object bandConf) {
+        this.bandConf = bandConf;
     }
 }

@@ -4,14 +4,17 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import vafilonov.UserMain;
+import vafilonov.UserMainRender;
 import vafilonov.hadooprasters.core.processing.stage.base.ProcessingStage;
 import vafilonov.hadooprasters.core.processing.stage.base.StageContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
+
+import static vafilonov.hadooprasters.core.util.PropertyConstants.DEFAULT_FS;
 
 public abstract class HadoopProcessingStage<InputContext extends HadoopStageContext, OutputContext extends HadoopStageContext>
         extends ProcessingStage<InputContext, OutputContext> {
@@ -59,26 +62,22 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
     protected final StageContext processStageInternal(@Nullable InputContext inputContext) {
 
         try {
-
             createAndSetupJob(inputContext);
-
             if (inputContext != null) {
                 forwardDirStageResources(inputContext.getDirStageResources());
                 forwardCacheStageResources(inputContext.getCacheStageResources());
             }
 
             if (!associatedJob.waitForCompletion(true)) {
-
-                return StageContext.failure("Job " + associatedJob.getJobName() + " failed. " + associatedJob.getStatus().getFailureInfo());
+                return StageContext.failure("Job " + associatedJob.getJobName() + " failed.");
             }
-
+            return createOutputContext(associatedJob, inputContext);
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
              throw new RuntimeException(e);
         } finally {
             cleanupJob(associatedJob, inputContext);
         }
 
-        return createOutputContext(associatedJob, inputContext);
     }
 
     /**
@@ -88,7 +87,9 @@ public abstract class HadoopProcessingStage<InputContext extends HadoopStageCont
      */
     private void createAndSetupJob(@Nullable InputContext inputContext) throws IOException {
         associatedJob = Job.getInstance(conf, getJobName());
-        associatedJob.setJarByClass(UserMain.class);
+        associatedJob.setJarByClass(UserMainRender.class);
+        URI uri = URI.create(conf.get(DEFAULT_FS.getProperty()) + "/libraries/libgdalalljni.so#libgdalalljni.so");
+        associatedJob.addCacheFile(uri);
         setupJob(associatedJob, inputContext);
     }
 
